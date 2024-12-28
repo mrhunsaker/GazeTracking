@@ -1,0 +1,23 @@
+{
+  "name": "gaze-analysis",
+  "version": "2024.0.1",
+  "description": "Gaze ANalysis Software for Academic Use",
+  "keywords": [
+    "eyetracking"
+  ],
+  "homepage": "https://github.com/mrhunsaker/GAZE_TRACKING#readme",
+  "bugs": {
+    "url": "https://github.com/mrhunsaker/GAZE_TRACKING/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrhunsaker/GAZE_TRACKING.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Michael Ryan Hunsaker, M.Ed., Ph.D.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  }
+}

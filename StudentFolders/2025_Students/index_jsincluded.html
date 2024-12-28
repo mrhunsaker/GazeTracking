@@ -1,0 +1,643 @@
+<!doctype html>
+<!--
+Copyright 2024-11-30 Michael Ryan Hunsaker, M.Ed., Ph.D.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAZE ANALYSIS EXPERIMENT</title>
+    <link rel="icon" href="data:;base64,=" />
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #test-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .object {
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            width: 400px;
+            height: 400px;
+            display: none;
+        }
+        #webgazerVideoFeed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 120px;
+            z-index: 10;
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div id="instruction"> <!-- Display instructions to the participant -->
+        <p>Look at the object that appears in the center</p>
+        <p>Then find that object among the three that appear and look at it</p>
+        <p>Press any key to start the experiment.</p>
+    </div>
+    <div id="test-container"></div>
+
+    <!--Load local dependencies-->
+    <script src="webgazer.js"></script>
+    <script src="localforage.min.js"></script>
+
+    <script>
+        // Define the TrialManager class
+        class TrialManager {
+            constructor() {
+                this.testContainer = document.getElementById("test-container");
+                this.instructionElement = document.getElementById("instruction");
+                this.trialTypes = ["1", "2"];
+                this.totalTrials = 40;
+                this.currentTrial = 0;
+                this.currentTrialData = {};
+                this.trialData = [];
+                this.gazeData = [];
+                this.isExperimentStarted = false;
+                this.calibrationComplete = false;
+                this.calibrationInProgress = false;
+                this.CALIBRATION_POINTS = 10; // Number of calibration points
+                this.currentGazeData = []; // Store gaze data for current trial
+                this.allGazeData = []; // Store all gaze data across trials
+
+                // Initialize image objects
+                this.setupImages();
+            }
+
+            processGazeData(gazePoint, trialStartTime) {
+        const gazeData = {
+            x: gazePoint.x,
+            y: gazePoint.y,
+            time: Date.now(), // Absolute timestamp
+            relativeTime: Date.now() - trialStartTime, // Time since trial start
+            phase: this.calibrationComplete ? 'experiment' : 'calibration'
+        };
+        this.currentGazeData.push(gazeData);
+        this.allGazeData.push(gazeData);
+    }
+
+            // Add the following methods to the TrialManager class
+            async startCalibrationPhase() {
+                if (this.calibrationInProgress || this.calibrationComplete) {
+                    console.log("Calibration already in progress or completed");
+                    return;
+                }
+                this.calibrationInProgress = true;
+
+                try {
+                    await this.initWebGazer();
+                    // Display calibration container
+                    const calibrationContainer = document.createElement("div");
+                    calibrationContainer.id = "calibration-container";
+                    Object.assign(calibrationContainer.style, {
+                        position: "fixed",
+                        top: "0",
+                        left: "0",
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "rgba(0,0,0,1.0)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: "1000",
+                        color: "white",
+                        textAlign: "center",
+                    });
+
+                    calibrationContainer.innerHTML = `
+                        <h2>Remaining Calibration Points: <span id="calibration-points">${this.CALIBRATION_POINTS}</span></h2>
+                    `;
+                    document.body.appendChild(calibrationContainer);
+
+                    let remainingPoints = this.CALIBRATION_POINTS;
+
+                    const createCalibrationPoint = () => {
+                        const existingPoint = calibrationContainer.querySelector('.calibration-point');
+                        if (existingPoint) existingPoint.remove();
+
+                        if (remainingPoints <= 0) {
+                            calibrationContainer.remove();
+                            this.calibrationComplete = true;
+                            this.calibrationInProgress = false;
+                            this.startExperiment();
+                            return;
+                        }
+
+                        const point = document.createElement("div");
+                        point.className = 'calibration-point';
+                        Object.assign(point.style, {
+                            position: "absolute",
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "50%",
+                            backgroundColor: "yellow",
+                            cursor: "pointer",
+                            zIndex: "1001"
+                        });
+
+                        const x = Math.random() * (window.innerWidth * 0.8) + window.innerWidth * 0.1;
+                        const y = Math.random() * (window.innerHeight * 0.8) + window.innerHeight * 0.1;
+                        point.style.left = `${x}px`;
+                        point.style.top = `${y}px`;
+
+                        const clickHandler = () => {
+                            if (!this.calibrationInProgress) return;
+
+                            webgazer.recordScreenPosition(x, y, 'click');
+                            point.remove();
+                            remainingPoints--;
+                            document.getElementById("calibration-points").textContent = remainingPoints;
+                            createCalibrationPoint();
+                        };
+
+                        point.addEventListener("click", clickHandler, { once: true });
+                        calibrationContainer.appendChild(point);
+                    };
+
+                    createCalibrationPoint();
+
+                } catch (err) {
+                    console.error("Calibration error:", err);
+                    this.calibrationInProgress = false;
+                }
+            }
+
+            hide(element) {
+                if (element) {
+                    element.style.display = "none";
+                }
+            }
+
+            showCentered(element) {
+                const containerWidth = this.testContainer.offsetWidth;
+                const containerHeight = this.testContainer.offsetHeight;
+
+                Object.assign(element.style, {
+                    position: "absolute",
+                    left: `${(containerWidth - element.offsetWidth) / 2}px`,
+                    top: `${(containerHeight - element.offsetHeight) / 2}px`,
+                    display: "block",
+                });
+
+                this.testContainer.appendChild(element);
+            }
+
+            showBlackScreen(duration = 1000) {
+                const blackScreen = document.createElement("div");
+
+                Object.assign(blackScreen.style, {
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "black",
+                    top: "0",
+                    left: "0",
+                    zIndex: "1000",
+                });
+
+                this.testContainer.appendChild(blackScreen);
+
+                setTimeout(() => {
+                    if (blackScreen.parentNode) {
+                        blackScreen.parentNode.removeChild(blackScreen);
+                    }
+                }, duration);
+            }
+
+            // Generate custom filename with initials and timestamp
+            generateFileName() {
+                const initials = "TEST"; // Change this to participant's initials
+                const timestamp = new Date().toISOString().replace(/[:\.]/g, "-");
+                return `${initials}_${timestamp}_data.json`;
+            }
+
+            shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            setupImages() {
+                // Preload images for all 403 objects
+                this.objectImages = {};
+                for (let i = 1; i <= 403; i++) {
+                    const img = new Image();
+                    img.src = `models/object${i.toString().padStart(3, "0")}.png`;
+                    this.objectImages[i] = img;
+                }
+            }
+
+            createImage(objectNum) {
+                const img = document.createElement("img");
+                img.src = `models/object${objectNum.toString().padStart(3, "0")}.png`;
+                img.className = "object";
+                return img;
+            }
+
+            async initWebGazer() {
+                try {
+                    // Check if WebGazer is loaded
+                    if (typeof webgazer === "undefined") {
+                        console.error("WebGazer is not loaded. Check script inclusion.");
+                        return;
+                    }
+
+                    console.log("Starting WebGazer initialization...");
+
+                    // Modify resume to handle potential null references
+                    await webgazer.resume().catch(err => {
+                        console.warn("WebGazer resume warning:", err);
+                    });
+
+                    console.log("WebGazer explicitly resumed.");
+
+                    // Enable video preview and face overlay visualization
+                    webgazer.showVideoPreview(true); //only activate to debug
+                    webgazer.showFaceOverlay(false); //only activate to debug
+                    // Set gaze listener to collect gaze data
+                    webgazer.setGazeListener((data, elapsedTime) => {
+                if (data && this.currentTrialData.startTime) {
+                    this.processGazeData(data, this.currentTrialData.startTime);
+                }
+            });
+
+                    // Configure WebGazer with comprehensive settings
+                    webgazer
+                        .setRegression("weightedRidge")
+                        .setTracker("TFFacemesh")
+                        .showPredictionPoints(false);
+
+                    // Start WebGazer with error handling
+                    await webgazer.begin().catch(err => {
+                        console.error("WebGazer begin error:", err);
+                    });
+
+                    console.log("WebGazer initialized successfully with face mesh.");
+                } catch (err) {
+                    console.error("Comprehensive WebGazer initialization error:", err);
+
+                    // Display user-friendly error
+                    if (this.instructionElement) {
+                        this.instructionElement.innerText = "Error initializing eye tracking. Please check console and ensure camera permissions.";
+                    }
+
+                    // Additional browser compatibility check
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        console.error("Browser does not support camera access");
+                        if (this.instructionElement) {
+                            this.instructionElement.innerText += "\nYour browser does not support camera access.";
+                        }
+                    }
+                }
+            }
+
+            async runTrial(trialType) {
+                this.currentGazeData = []; 
+                this.gazeData = [];
+                const startTime = Date.now();
+                // Choose a random object to be object1 for this trial
+                const object1Num = Math.floor(Math.random() * 403) + 1;
+
+                this.currentTrialData = {
+            trialNumber: this.currentTrial + 1,
+            type: trialType,
+            startTime: startTime,
+            object1: Math.floor(Math.random() * 403) + 1,
+            testObjects: [],
+            positions: [],
+            gazeData: [], // Will be populated at end of trial
+        };
+
+                // Show object1 in center first
+                const sampleObject = this.createImage(object1Num);
+                this.showCentered(sampleObject);
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+                sampleObject.remove();
+
+                // Black screen pause
+                await this.showBlackScreen(2000);
+
+                // Create test phase objects based on trial type
+                let testObjects = [];
+                if (trialType === 1) {
+                    // Trial type 1: object1 and two copies of another random object
+                    let object2Num;
+                    do {
+                        object2Num = Math.floor(Math.random() * 403) + 1;
+                    } while (object2Num === object1Num);
+
+                    testObjects = [{
+                            num: object1Num,
+                            isTarget: true
+                        },
+                        {
+                            num: object2Num,
+                            isTarget: false
+                        },
+                        {
+                            num: object2Num,
+                            isTarget: false
+                        },
+                    ];
+                } else {
+                    // Trial type 2: object1 and two different objects
+                    let object2Num, object3Num;
+                    do {
+                        object2Num = Math.floor(Math.random() * 403) + 1;
+                    } while (object2Num === object1Num);
+
+                    do {
+                        object3Num = Math.floor(Math.random() * 403) + 1;
+                    } while (
+                        object3Num === object1Num ||
+                        object3Num === object2Num
+                    );
+
+                    testObjects = [{
+                            num: object1Num,
+                            isTarget: true
+                        },
+                        {
+                            num: object2Num,
+                            isTarget: false
+                        },
+                        {
+                            num: object3Num,
+                            isTarget: false
+                        },
+                    ];
+                }
+
+                // Randomize positions
+                this.shuffleArray(testObjects);
+
+                // Record object positions for data
+                this.currentTrialData.testObjects = testObjects.map(
+                    (obj) => obj.num,
+                );
+                this.currentTrialData.positions = testObjects.map((obj, index) => {
+                    let position;
+                    if (index === 0) {
+                        position = "left";
+                    } else if (index === 1) {
+                        position = "center";
+                    } else if (index === 2) {
+                        position = "right"; // Explicitly handle index 2
+                    } else {
+                        position = "right"; // Default case for any other indices (e.g., 3, 4, etc.)
+                    }
+
+                    return {
+                        position,
+                        objectNum: obj.num,
+                        isTarget: obj.isTarget,
+                    };
+                });
+
+                // Create and position the images
+                const imageElements = testObjects.map((obj) =>
+                    this.createImage(obj.num),
+                );
+                this.positionTestObjects(imageElements);
+
+                // Show images for 10 seconds
+                await new Promise((resolve) => setTimeout(resolve, 10000));
+
+                // Clean up
+                imageElements.forEach((img) => img.remove());
+                this.currentTrialData.endTime = Date.now();
+        this.currentTrialData.gazeData = this.currentGazeData;
+        this.trialData.push(this.currentTrialData);
+        
+        this.currentTrial++;
+            }
+
+            async runTrainingTrial(sampleObjectNum) {
+                const sampleObject = this.createImage(sampleObjectNum);
+                this.showCentered(sampleObject);
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+                sampleObject.remove();
+            }
+
+            positionTestObjects(objects) {
+                const containerWidth = this.testContainer.offsetWidth;
+                const containerHeight = this.testContainer.offsetHeight;
+                const offset = containerWidth * 0.3; // 30% of container width
+                const positions = ["left", "center", "right"];
+
+                objects.forEach((obj, index) => {
+                    obj.style.position = "absolute"; // Ensure object is absolutely positioned
+                    let xPos = 0; // Default x position
+
+                    // Explicitly handle positions based on the index
+                    if (index === 0) {
+                        xPos = -offset; // "left" position
+                    } else if (index === 1) {
+                        xPos = 0; // "center" position
+                    } else if (index === 2) {
+                        xPos = offset; // "right" position
+                    }
+
+                    // Apply calculated x position to each object
+                    obj.style.left = `${xPos}px`;
+
+                    // Optional: Set y position based on your layout or container height
+                    // You can add further logic here if needed to adjust vertical positions.
+                    // For example, we could center objects vertically in the container:
+                    const yPos = (containerHeight - obj.offsetHeight) / 2;
+                    obj.style.top = `${yPos}px`;
+                });
+            }
+
+            async runTestTrial(sampleObjectNum) {
+                // Show sample object first
+                const sampleObject = this.createImage(sampleObjectNum);
+                this.showCentered(sampleObject);
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+                sampleObject.remove();
+
+                // Black screen pause
+                await this.showBlackScreen(2000);
+
+                // Create test objects
+                let testObjects = [];
+                if (Math.random() < 0.5) {
+                    // Type 1 trial
+                    let otherObjectNum;
+                    do {
+                        otherObjectNum =
+                            Math.floor(Math.random() * 403) + 1;
+                    } while (otherObjectNum === sampleObjectNum);
+
+                    testObjects = [
+                        this.createImage(sampleObjectNum),
+                        this.createImage(otherObjectNum),
+                        this.createImage(otherObjectNum),
+                    ];
+                } else {
+                    // Type 2 trial
+                    const usedObjects = new Set([sampleObjectNum]);
+                    while (usedObjects.size < 3) {
+                        const newObjectNum =
+                            Math.floor(Math.random() * 403) + 1;
+                        if (!usedObjects.has(newObjectNum)) {
+                            usedObjects.add(newObjectNum);
+                            testObjects.push(
+                                this.createImage(newObjectNum),
+                            );
+                        }
+                    }
+                }
+
+                this.positionTestObjects(testObjects);
+                await new Promise((resolve) => setTimeout(resolve, 10000));
+                testObjects.forEach((obj) => obj.remove());
+                await this.showBlackScreen(2000);
+            }
+
+            positionTestObjects(objects) {
+                const containerWidth = this.testContainer.offsetWidth;
+                const containerHeight = this.testContainer.offsetHeight;
+                const offset = containerWidth * 0.3; // 30% of container width
+                const positions = ["left", "center", "right"];
+
+                objects.forEach((obj, index) => {
+                    obj.style.position = "absolute";
+                    if (index === 0) {
+                        obj.style.left = `${containerWidth / 2 - 200}px`;
+                        obj.style.top = `${containerHeight / 2 - 200}px`;
+                    } else if (index === 1) {
+                        obj.style.left = `${containerWidth / 2 - 200 - offset}px`;
+                        obj.style.top = `${containerHeight / 2 - 200}px`;
+                    } else if (index === 2) {
+                        obj.style.left = `${containerWidth / 2 - 200 + offset}px`;
+                        obj.style.top = `${containerHeight / 2 - 200}px`;
+                    } else {
+                        obj.style.left = `${containerWidth / 2 - 200 + offset}px`;
+                        obj.style.top = `${containerHeight / 2 - 200}px`;
+                    }
+                    obj.style.display = "block";
+                    this.testContainer.appendChild(obj);
+                });
+            }
+
+            showCentered(element) {
+                element.style.position = "absolute";
+                element.style.top = "50%";
+                element.style.left = "50%";
+                element.style.transform = "translate(-50%, -50%)";
+                element.style.display = "block";
+                this.testContainer.appendChild(element);
+            }
+
+            async showBlackScreen(duration) {
+                document.body.style.backgroundColor = "black";
+                await new Promise((resolve) =>
+                    setTimeout(resolve, duration),
+                );
+                document.body.style.backgroundColor = "black";
+            }
+
+            hide(element) {
+                element.style.display = "none";
+            }
+
+            // Modify startExperiment to include WebGazer resume
+            async startExperiment() {
+                if (!this.calibrationComplete) {
+                    console.warn("Attempt to start experiment before calibration");
+                    return;
+                }
+
+                console.log("Starting experiment...");
+                this.hide(this.instructionElement);
+
+                for (let i = 0; i < this.totalTrials; i++) {
+                    await this.runTrial(
+                        this.trialTypes[i % this.trialTypes.length]
+                    );
+                }
+
+                // Save data and complete experiment
+                try {
+                    const experimentData = {
+                trialData: this.trialData,
+                gazeData: this.allGazeData, // Complete gaze data record
+                timestamp: Date.now(),
+                totalTrials: this.totalTrials
+            };
+
+                    // Save using localforage
+                    await localforage.setItem("experimentData", experimentData);
+                    console.log("Data saved to localforage successfully");
+
+                    // Create and trigger download of JSON file
+                    const dataStr = "data:text/json;charset=utf-8," +
+                        encodeURIComponent(JSON.stringify(experimentData, null, 2));
+
+                    const downloadAnchorNode = document.createElement("a");
+                    downloadAnchorNode.setAttribute("href", dataStr);
+                    downloadAnchorNode.setAttribute("download", this.generateFileName());
+
+                    document.body.appendChild(downloadAnchorNode);
+                    downloadAnchorNode.click();
+                    downloadAnchorNode.remove();
+
+                    alert("Experiment completed! Data saved and downloaded to your ~/Documents folder.");
+                } catch (err) {
+                    console.error("Error saving data:", err);
+                    alert("Error saving experiment data. Please check the console.");
+                }
+            }
+        }
+
+        // Single event listener for initialization
+        document.addEventListener("DOMContentLoaded", () => {
+            const trialManager = new TrialManager();
+            let experimentInitiated = false;
+
+            document.addEventListener("keydown", async (e) => {
+                if (experimentInitiated) return;
+
+                experimentInitiated = true;
+                try {
+                    await navigator.mediaDevices.getUserMedia({ video: true });
+                    await trialManager.startCalibrationPhase();
+                } catch (err) {
+                    console.error(`Initialization error:`, err);
+                    experimentInitiated = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

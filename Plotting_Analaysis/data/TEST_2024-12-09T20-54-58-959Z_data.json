@@ -1,0 +1,1206 @@
+{
+  "trialData": [
+    {
+      "trialNumber": 1,
+      "type": "1",
+      "object1": 175,
+      "testObjects": [
+        175,
+        111,
+        92
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 175,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 111,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 92,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777112979,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 2,
+      "type": "2",
+      "startTime": 1733777097966,
+      "object1": 148,
+      "testObjects": [
+        341,
+        148,
+        15
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 341,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 148,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 15,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777128006,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 3,
+      "type": "1",
+      "startTime": 1733777112979,
+      "object1": 205,
+      "testObjects": [
+        310,
+        120,
+        205
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 310,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 120,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 205,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777143025,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 4,
+      "type": "2",
+      "startTime": 1733777128006,
+      "object1": 19,
+      "testObjects": [
+        64,
+        363,
+        19
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 64,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 363,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 19,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777158040,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 5,
+      "type": "1",
+      "startTime": 1733777143025,
+      "object1": 143,
+      "testObjects": [
+        143,
+        27,
+        299
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 143,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 27,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 299,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777173062,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 6,
+      "type": "2",
+      "startTime": 1733777158040,
+      "object1": 156,
+      "testObjects": [
+        363,
+        156,
+        77
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 363,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 156,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 77,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777188098,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 7,
+      "type": "1",
+      "startTime": 1733777173062,
+      "object1": 209,
+      "testObjects": [
+        366,
+        233,
+        209
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 366,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 233,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 209,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777203115,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 8,
+      "type": "2",
+      "startTime": 1733777188098,
+      "object1": 280,
+      "testObjects": [
+        72,
+        280,
+        228
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 72,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 280,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 228,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777218142,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 9,
+      "type": "1",
+      "startTime": 1733777203115,
+      "object1": 247,
+      "testObjects": [
+        385,
+        150,
+        247
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 385,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 150,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 247,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777233179,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 10,
+      "type": "2",
+      "startTime": 1733777218142,
+      "object1": 247,
+      "testObjects": [
+        251,
+        106,
+        247
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 251,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 106,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 247,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777248200,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 11,
+      "type": "1",
+      "startTime": 1733777233179,
+      "object1": 191,
+      "testObjects": [
+        308,
+        191,
+        207
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 308,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 191,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 207,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777263218,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 12,
+      "type": "2",
+      "startTime": 1733777248200,
+      "object1": 106,
+      "testObjects": [
+        296,
+        146,
+        106
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 296,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 146,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 106,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777278260,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 13,
+      "type": "1",
+      "startTime": 1733777263218,
+      "object1": 184,
+      "testObjects": [
+        184,
+        337,
+        315
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 184,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 337,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 315,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777293269,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 14,
+      "type": "2",
+      "startTime": 1733777278260,
+      "object1": 149,
+      "testObjects": [
+        149,
+        243,
+        344
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 149,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 243,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 344,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777308297,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 15,
+      "type": "1",
+      "startTime": 1733777293269,
+      "object1": 29,
+      "testObjects": [
+        29,
+        382,
+        100
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 29,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 382,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 100,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777323315,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 16,
+      "type": "2",
+      "startTime": 1733777308297,
+      "object1": 296,
+      "testObjects": [
+        182,
+        314,
+        296
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 182,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 314,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 296,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777338346,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 17,
+      "type": "1",
+      "startTime": 1733777323315,
+      "object1": 194,
+      "testObjects": [
+        400,
+        194,
+        202
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 400,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 194,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 202,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777353376,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 18,
+      "type": "2",
+      "startTime": 1733777338346,
+      "object1": 318,
+      "testObjects": [
+        274,
+        318,
+        13
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 274,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 318,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 13,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777368398,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 19,
+      "type": "1",
+      "startTime": 1733777353376,
+      "object1": 86,
+      "testObjects": [
+        86,
+        114,
+        122
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 86,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 114,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 122,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777383422,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 20,
+      "type": "2",
+      "startTime": 1733777368398,
+      "object1": 312,
+      "testObjects": [
+        363,
+        312,
+        378
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 363,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 312,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 378,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777398474,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 21,
+      "type": "1",
+      "startTime": 1733777383422,
+      "object1": 17,
+      "testObjects": [
+        4,
+        17,
+        324
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 4,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 17,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 324,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777413490,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 22,
+      "type": "2",
+      "startTime": 1733777398474,
+      "object1": 156,
+      "testObjects": [
+        193,
+        317,
+        156
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 193,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 317,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 156,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777428493,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 23,
+      "type": "1",
+      "startTime": 1733777413490,
+      "object1": 162,
+      "testObjects": [
+        108,
+        162,
+        294
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 108,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 162,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 294,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777443528,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 24,
+      "type": "2",
+      "startTime": 1733777428493,
+      "object1": 168,
+      "testObjects": [
+        222,
+        168,
+        8
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 222,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 168,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 8,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777458549,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 25,
+      "type": "1",
+      "startTime": 1733777443528,
+      "object1": 160,
+      "testObjects": [
+        32,
+        336,
+        160
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 32,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 336,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 160,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777473568,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 26,
+      "type": "2",
+      "startTime": 1733777458549,
+      "object1": 377,
+      "testObjects": [
+        377,
+        403,
+        103
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 377,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 403,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 103,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777488590,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 27,
+      "type": "1",
+      "startTime": 1733777473568,
+      "object1": 366,
+      "testObjects": [
+        174,
+        348,
+        366
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 174,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 348,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 366,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777503615,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 28,
+      "type": "2",
+      "startTime": 1733777488590,
+      "object1": 263,
+      "testObjects": [
+        120,
+        263,
+        251
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 120,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 263,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 251,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777518638,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 29,
+      "type": "1",
+      "startTime": 1733777503615,
+      "object1": 216,
+      "testObjects": [
+        286,
+        216,
+        206
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 286,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 216,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 206,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777533659,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 30,
+      "type": "2",
+      "startTime": 1733777518638,
+      "object1": 133,
+      "testObjects": [
+        133,
+        159,
+        60
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 133,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 159,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 60,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777548672,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 31,
+      "type": "1",
+      "startTime": 1733777533659,
+      "object1": 325,
+      "testObjects": [
+        16,
+        325,
+        340
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 16,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 325,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 340,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777563685,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 32,
+      "type": "2",
+      "startTime": 1733777548672,
+      "object1": 63,
+      "testObjects": [
+        219,
+        42,
+        63
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 219,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 42,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 63,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777578712,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 33,
+      "type": "1",
+      "startTime": 1733777563685,
+      "object1": 26,
+      "testObjects": [
+        379,
+        26,
+        82
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 379,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 26,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 82,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777593744,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 34,
+      "type": "2",
+      "startTime": 1733777578712,
+      "object1": 5,
+      "testObjects": [
+        259,
+        5,
+        205
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 259,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 5,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 205,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777608760,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 35,
+      "type": "1",
+      "startTime": 1733777593744,
+      "object1": 157,
+      "testObjects": [
+        280,
+        253,
+        157
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 280,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 253,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 157,
+          "isTarget": true
+        }
+      ],
+      "endTime": 1733777623780,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 36,
+      "type": "2",
+      "startTime": 1733777608760,
+      "object1": 255,
+      "testObjects": [
+        2,
+        255,
+        188
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 2,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 255,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 188,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777638811,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 37,
+      "type": "1",
+      "startTime": 1733777623780,
+      "object1": 71,
+      "testObjects": [
+        237,
+        71,
+        232
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 237,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 71,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 232,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777653839,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 38,
+      "type": "2",
+      "startTime": 1733777638811,
+      "object1": 243,
+      "testObjects": [
+        37,
+        243,
+        283
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 37,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 243,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 283,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777668853,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 39,
+      "type": "1",
+      "startTime": 1733777653839,
+      "object1": 289,
+      "testObjects": [
+        397,
+        289,
+        159
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 397,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 289,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 159,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777683882,
+      "gazeData": []
+    },
+    {
+      "trialNumber": 40,
+      "type": "2",
+      "startTime": 1733777668853,
+      "object1": 31,
+      "testObjects": [
+        31,
+        205,
+        192
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 31,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 205,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 192,
+          "isTarget": false
+        }
+      ],
+      "endTime": 1733777698907,
+      "gazeData": []
+    }
+  ],
+  "gazeData": [],
+  "timestamp": 1733777698907,
+  "totalTrials": 40
+}
