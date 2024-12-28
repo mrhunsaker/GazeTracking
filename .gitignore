@@ -120,3 +120,8 @@ __pycache__/
 cert.pem
 key.pem
 *.pem
+
+eslint.config.mjs
+.prettierrc
+.prettierignore
+
