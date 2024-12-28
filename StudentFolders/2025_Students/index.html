@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+Copyright 2024-11-30 Michael Ryan Hunsaker, M.Ed., Ph.D.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>GAZE ANALYSIS</title>
+    <link href="data:;base64,=" rel="icon"/>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        #test-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .object {
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            width: 400px;
+            height: 400px;
+            display: none;
+        }
+
+        #webgazerVideoFeed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 120px;
+            z-index: 10;
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+<div id="instruction">
+    <p>Look at the object that appears in the center</p>
+    <p>Then find that object among the three that appear and look at it</p>
+    <p>Press any key to start the experiment.</p>
+</div>
+<div id="test-container"></div>
+
+<!--Load dependencies-->
+<script src="webgazer.js"></script>
+<script src="localforage.min.js"></script>
+
+<!--Load your module-->
+<script type="module">
+    import {initializeExperiment} from './trialManager.js';
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initializeExperiment();
+    });
+</script>
