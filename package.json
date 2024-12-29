@@ -1,39 +1,39 @@
 {
     "name": "gaze-tracking",
-    "version": "2024.0.1",
-    "description": "Gaze Analysis Software for Academic Use",
+    "version": "2024.0.1-beta",
+    "description": "Gaze Analysis Software for Educational Use",
     "keywords": [
-      "eyetracking",
-      "gaze",
-      "analysis",
-      "academic"
+        "eyetracking",
+        "gaze",
+        "analysis",
+        "academic"
     ],
-    "homepage": "https://github.com/mrhunsaker/GAZE_TRACKING#readme",
+    "homepage": "https://github.com/mrhunsaker/GazeTracking#readme",
     "bugs": {
-      "url": "https://github.com/mrhunsaker/GAZE_TRACKING/issues"
+        "url": "https://github.com/mrhunsaker/GazeTracking/issues"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/mrhunsaker/GAZE_TRACKING.git"
+        "type": "git",
+        "url": "git+https://github.com/mrhunsaker/GazeTracking.git"
     },
     "license": "Apache-2.0",
     "author": "Michael Ryan Hunsaker, M.Ed., Ph.D.",
     "type": "module",
     "main": "index.js",
     "scripts": {
-      "start": "node index.js",
-      "test": "jest",
-      "build": "webpack --config webpack.config.js",
-      "lint": "eslint ."
+        "start": "node index.js",
+        "test": "jest",
+        "build": "webpack --config webpack.config.js",
+        "lint": "eslint ."
     },
     "dependencies": {
-      "express": "^4.17.1",
-      "http-server": "^14.0.0"
+        "express": "^4.17.1",
+        "http-server": "^14.0.0"
     },
     "devDependencies": {
-      "jest": "^29.0.0",
-      "eslint": "^8.0.0",
-      "webpack": "^5.0.0",
-      "webpack-cli": "^4.0.0"
+        "jest": "^29.0.0",
+        "eslint": "^8.0.0",
+        "webpack": "^5.0.0",
+        "webpack-cli": "^4.0.0"
     }
-  }
+}
