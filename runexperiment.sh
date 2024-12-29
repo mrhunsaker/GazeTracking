@@ -30,7 +30,8 @@ BLUE='\033[34m'         # Blue
 
 # Predefined student list
 declare -a STUDENTS=(
-    "2025_Students"
+    "2025_Students",
+    "Development_Students"
 )
 
 # Function to clear screen and display header
@@ -97,10 +98,10 @@ check_requirements() {
         exit 1
     fi
 
-    # Check chromium (supports multiple possible binary names)
-    if ! command -v chromium &> /dev/null && ! command -v google-chrome &> /dev/null; then
-        echo -e "\n${ORANGE}Error: Chrome is not installed.${NC}"
-        echo -e "${WHITE}Please install Chrome using your system's package manager${NC}"
+    # Check Microsoft Edge, Google Chrome, Firefox, or Chromium
+    if ! command -v msedge &> /dev/null && ! command -v google-chrome &> /dev/null && ! command -v firefox &> /dev/null && ! command -v chromium &> /dev/null; then
+        echo -e "\n${ORANGE}Error: Neither Microsoft Edge, Google Chrome, Firefox, nor Chromium is installed.${NC}"
+        echo -e "${WHITE}Please install one of these browsers using your system's package manager${NC}"
         exit 1
     fi
 }
@@ -110,18 +111,22 @@ launch_browser() {
     local url=$1
     local browser_cmd
 
-    # Determine which Chrome command is available
-    if command -v chrome &> /dev/null; then
-        browser_cmd="chrome"
-    else
+    # Determine which browser command is available
+    if command -v msedge &> /dev/null; then
+        browser_cmd="msedge"
+    elif command -v google-chrome &> /dev/null; then
         browser_cmd="google-chrome"
+    elif command -v firefox &> /dev/null; then
+        browser_cmd="firefox"
+    elif command -v chromium &> /dev/null; then
+        browser_cmd="chromium"
     fi
 
     # Wait a bit for the server to start
     sleep 2
 
     # Launch browser in background
-    echo -e "${WHITE}Launching ${CYAN}Chromium${WHITE}...${NC}"
+    echo -e "${WHITE}Launching ${CYAN}${browser_cmd}${WHITE}...${NC}"
     $browser_cmd "$url" &> /dev/null &
 }
 
