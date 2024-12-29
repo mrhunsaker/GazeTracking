@@ -1,3 +1,6 @@
+# Sample JSON Output
+
+```json
 {
   "trialData": [
     {
@@ -44,3 +47,4 @@
   "timestamp": 1701542500000,  // Timestamp of entire experiment
   "totalTrials": 40
 }
+```
