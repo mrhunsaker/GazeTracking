@@ -30,8 +30,7 @@ BLUE='\033[34m'         # Blue
 
 # Predefined student list
 declare -a STUDENTS=(
-    "2025_Students",
-    "Development_Students"
+    "2025_Students" "Development_Students"
 )
 
 # Function to clear screen and display header

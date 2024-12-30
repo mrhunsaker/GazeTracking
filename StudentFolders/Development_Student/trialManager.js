@@ -82,19 +82,19 @@ export class TrialManager {
             // Import exclusions based on selected test type
             switch (this.testType.toLowerCase()) {
                 case 'Shapes':
-                    const {objectExclusions_Shapes} = await import('./objectExclusions.js');
+                    const { objectExclusions_Shapes } = await import('./objectExclusions.js');
                     this.objectExclusions_Shapes = objectExclusions_Shapes;
                     break;
                 case 'Colors':
-                    const {objectExclusions_Colors} = await import('./objectExclusions.js');
+                    const { objectExclusions_Colors } = await import('./objectExclusions.js');
                     this.objectExclusions_Colors = objectExclusions_Colors;
                     break;
                 case 'Abstract':
-                    const {objectExclusions_Abstract} = await import('./objectExclusions.js');
+                    const { objectExclusions_Abstract } = await import('./objectExclusions.js');
                     this.objectExclusions_Abstract = objectExclusions_Abstract;
                     break;
                 case 'Pictures':
-                    const {objectExclusions_Pictures} = await import('./objectExclusions.js');
+                    const { objectExclusions_Pictures } = await import('./objectExclusions.js');
                     this.objectExclusions_Abstract = objectExclusions_Abstract;
                     break;
                 default:
@@ -192,7 +192,7 @@ export class TrialManager {
      * @return {number} A random object number that is not included in the excluded array. If no valid options remain, returns a random object number from the entire range.
      */
     getRandomObjectNumber(exclude) {
-        const validObjects = Array.from({length: this.totalImages}, (_, i) => i + 1).filter(num => !exclude.includes(num));
+        const validObjects = Array.from({ length: this.totalImages }, (_, i) => i + 1).filter(num => !exclude.includes(num));
 
         if (validObjects.length === 0) {
             console.error('No valid objects available');
@@ -328,15 +328,15 @@ export class TrialManager {
 
             // Predefined calibration points in (percentage-based positioning on screen)
             const predefinedPositions = [
-                {x: 0.1, y: 0.1}, // Top-left
-                {x: 0.5, y: 0.1}, // Top-center
-                {x: 0.9, y: 0.1}, // Top-right
-                {x: 0.9, y: 0.5}, // Middle-right
-                {x: 0.5, y: 0.5}, // Middle-center
-                {x: 0.1, y: 0.5}, // Middle-left
-                {x: 0.1, y: 0.9}, // Bottom-left
-                {x: 0.5, y: 0.9}, // Bottom-center
-                {x: 0.9, y: 0.9}, // Bottom-right
+                { x: 0.1, y: 0.1 }, // Top-left
+                { x: 0.5, y: 0.1 }, // Top-center
+                { x: 0.9, y: 0.1 }, // Top-right
+                { x: 0.9, y: 0.5 }, // Middle-right
+                { x: 0.5, y: 0.5 }, // Middle-center
+                { x: 0.1, y: 0.5 }, // Middle-left
+                { x: 0.1, y: 0.9 }, // Bottom-left
+                { x: 0.5, y: 0.9 }, // Bottom-center
+                { x: 0.9, y: 0.9 }, // Bottom-right
             ];
 
             let currentPointIndex = 0;
@@ -365,7 +365,7 @@ export class TrialManager {
                     zIndex: "1001"
                 });
 
-                const {x, y} = predefinedPositions[currentPointIndex];
+                const { x, y } = predefinedPositions[currentPointIndex];
                 const screenX = window.innerWidth * x * 0.8 + window.innerWidth * 0.1;
                 const screenY = window.innerHeight * y * 0.8 + window.innerHeight * 0.1;
                 point.style.left = `${screenX}px`;
@@ -382,7 +382,7 @@ export class TrialManager {
                     createCalibrationPoint();
                 };
 
-                point.addEventListener("click", clickHandler, {once: true});
+                point.addEventListener("click", clickHandler, { once: true });
                 calibrationContainer.appendChild(point);
             };
 
@@ -717,9 +717,9 @@ export class TrialManager {
                 // Get a non-excluded object
                 const object2Num = this.getRandomObjectNumber(excludeList);
                 testObjects = [
-                    {num: object1Num, isTarget: true},
-                    {num: object2Num, isTarget: false},
-                    {num: object2Num, isTarget: false}
+                    { num: object1Num, isTarget: true },
+                    { num: object2Num, isTarget: false },
+                    { num: object2Num, isTarget: false }
                 ];
             }
             else {
@@ -729,9 +729,9 @@ export class TrialManager {
                 const object3Num = this.getRandomObjectNumber(newExcludeList);
 
                 testObjects = [
-                    {num: object1Num, isTarget: true},
-                    {num: object2Num, isTarget: false},
-                    {num: object3Num, isTarget: false}
+                    { num: object1Num, isTarget: true },
+                    { num: object2Num, isTarget: false },
+                    { num: object3Num, isTarget: false }
                 ];
             }
 
