@@ -27,7 +27,7 @@ set GREEN=^[[32m
 set BLUE=^[[34m
 
 :: Predefined student list
-set STUDENTS=2025_Students Development_Students
+set STUDENTS=2025_Students Development_Student
 
 :: Function to clear screen and display header
 :display_header

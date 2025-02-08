@@ -31,7 +31,7 @@ $BLUE = "`e[34m"         # Blue
 # Predefined student list
 $STUDENTS = @(
     "2025_Students",
-    "Development_Students"
+    "Development_Student"
 )
 
 # Function to clear screen and display header
