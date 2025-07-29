@@ -1,22 +1,25 @@
 # Gaze Analysis Experiment Manager
 
-This project implements a comprehensive gaze tracking experiment system using WebGazer.js. It includes a TrialManager for executing visual experiments, collecting gaze data, and managing participant interactions.
+This project implements a comprehensive gaze tracking experiment system using WebGazer.js. It enables researchers to present stimuli, track participants' gaze patterns, and collect data for visual attention and object recognition studies.
 
 ## Table of Contents
 
 1. [Overview](#overview)
 2. [Features](#features)
-3. [Installation](#installation)
-4. [Component Details](#component-details)
-5. [Usage Guide](#usage-guide)
-6. [File Structure](#file-structure)
-7. [ANalysis Script](#analysis-script)
-8. [How to Contribute](#how-to-contribute)
-9. [License](#license)
+3. [System Requirements](#system-requirements)
+4. [Installation & Setup](#installation--setup)
+5. [Project Structure](#project-structure)
+6. [Usage Guide](#usage-guide)
+7. [Technical Details](#technical-details)
+8. [Troubleshooting](#troubleshooting)
+9. [How to Contribute](#how-to-contribute)
+10. [License](#license)
+
+---
 
 ## Overview
 
-The Gaze Analysis Experiment Manager enables researchers to:
+The Gaze Analysis Experiment Manager allows researchers to:
 
 - Track participant gaze data using WebGazer.js
 - Run configurable visual trials with randomized image objects
@@ -24,174 +27,192 @@ The Gaze Analysis Experiment Manager enables researchers to:
 - Collect and store experimental data locally
 - Support multiple test types (Shapes, Colors, Abstract, Pictures)
 
+---
+
 ## Features
 
-### Core Features
+- **Multiple stimulus categories:** Shapes, Colors, Abstract images, and Pictures
+- **Configurable trials:** Select from 10-50 trials per session
+- **Automated calibration:** Built-in eye tracker calibration procedure
+- **Data collection:** Comprehensive gaze data recording with timestamps
+- **Local data storage:** Results saved locally as JSON files
+- **Secure delivery:** HTTPS protocol implementation for secure content delivery
+- **Browser compatibility:** Chrome, Firefox, Edge
+- **Modular JavaScript architecture**
 
-- **Dynamic Test Configuration:**
-  - Participant initials collection
-  - Test type selection (Shapes/Colors/Abstract/Pictures)
-  - Configurable trial count (10-50 trials)
+---
 
-- **Calibration System:**
-  - Interactive calibration points
-  - Visual feedback during calibration
-  - Webcam-based gaze tracking setup
+## System Requirements
 
-- **Trial Management:**
-  - Two trial types:
-    - Type 1: Single repeated object trials
-    - Type 2: Varied object trials
-  - Randomized object presentation
-  - Configurable display durations
-  - Black screen transitions
+- Modern web browser with WebRTC support (Chrome, Firefox, Edge, or Chromium)
+- Webcam access for eye tracking
+- Node.js and npm installed (for `http-server`)
+- SSL certificates for secure server connection
 
-- **Data Collection:**
-  - Real-time gaze tracking
-  - Trial metadata recording
-  - Automatic data export to JSON
-  - Local storage using localforage
+---
 
-### Technical Features
-
-- WebGazer.js integration for eye tracking
-- Secure HTTPS server support
-- Browser compatibility (Chrome/Firefox/Edge)
-- Modular JavaScript architecture
-
-## Installation
+## Installation & Setup
 
 ### Prerequisites
 
-1. Install Node.js and npm
-2. Install required global packages:
+1. Install Node.js and npm from [nodejs.org](https://nodejs.org/)
+2. Install the required http-server package:
+
+   ```bash
+   npm install -g http-server
+   ```
+
+3. Install OpenSSL (if not already installed):
+   - **Linux:** `sudo apt-get install openssl` (Ubuntu/Debian) or `sudo yum install openssl` (CentOS/RHEL)
+   - **macOS:** `brew install openssl`
+   - **Windows:** Download from [openssl.org](https://www.openssl.org/source/) or use a binary distribution
+4. Generate SSL certificates (`cert.pem` and `key.pem`) or use provided ones
+
+### Generating SSL Certificates
+
+The experiment requires HTTPS for security and webcam access. Generate self-signed certificates with OpenSSL:
 
 ```bash
-npm install -g http-server
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
 ```
 
-### Setup Steps
+Follow the prompts (defaults are fine for local testing). Place both `cert.pem` and `key.pem` in the project root directory.
 
-1. Clone the repository:
+---
+
+## Project Structure
 
 ```bash
-git clone https://github.com/mrhunsaker/GazeTracking.git
-cd GazeTracking
+GazeTracking/
+├── cert.pem                  # SSL certificate
+├── key.pem                   # SSL key
+├── runexperiment.sh          # Bash script to start experiment
+├── scripts/                  # Windows script versions
+│   ├── runexperiment.ps1     # PowerShell script
+│   └── runexperiment.bat     # Windows batch file
+├── StudentFolders/           # Contains participant folders
+│   ├── [Student_Folder]/
+│   │   ├── index.html
+│   │   ├── trialManager.js
+│   │   ├── objectExclusions.js
+│   │   ├── webgazer.js
+│   │   ├── localforage.min.js
+│   │   ├── Shapes/
+│   │   ├── Colors/
+│   │   ├── Abstract/
+│   │   └── Pictures/
+└── AnalysisPlotting.py       # Data analysis script
 ```
 
-2. Set up SSL certificates:
+**Stimulus images** should be placed in the respective folders and named as `object001.png`, `object002.png`, etc. Update `objectExclusions.js` if certain stimuli should not appear together.
 
-- Place `cert.pem` and `key.pem` in the StudentFolders directory
-
-3. Install dependencies:
-
-```bash
-npm install
-```
-
-4. Start the experiment server:
-
-```bash
-bash runexperiment.sh
-```
-
-## Component Details
-
-### index.html
-
-The main experiment interface that:
-
-- Loads required scripts (WebGazer, localforage)
-- Provides experiment instructions
-- Handles video feed display
-- Manages experiment container styling
-
-### trialManager.js
-
-Core experiment logic including:
-
-- Trial execution and sequencing
-- Gaze data collection
-- Calibration procedures
-- Image loading and display
-- Data storage and export
-
-### runexperiment.sh
-
-Experiment launcher script featuring:
-
-- Secure HTTPS server setup
-- Student folder management
-- Browser autolaunch
-- Dependency validation
-- Colorblind-friendly terminal output
+---
 
 ## Usage Guide
 
-1. Launch the experiment:
+### Running the Experiment
+
+#### On Linux/macOS
 
 ```bash
-bash runexperiment.sh
+chmod +x runexperiment.sh
+./runexperiment.sh
 ```
 
-2. Select student folder when prompted
+#### On Windows
 
-3. Wait for browser launch with experiment interface
+- **PowerShell:** `.\scripts\runexperiment.ps1`
+- **Command Prompt:** `scripts\runexperiment.bat`
 
-4. Follow on-screen instructions for:
-   - Entering participant details
-   - Completing calibration
-   - Running trials
+#### Steps
 
-5. Data will automatically download after completion
+1. When prompted, select the base directory (default: `./StudentFolders`)
+2. Choose a student folder from the list
+3. The experiment will launch in your default browser
 
-## File Structure
+#### During the Experiment
 
-```
-GazeTracking/
-├── StudentFolders/
-│   ├── cert.pem
-│   ├── key.pem
-│   └── [Student_Folder]/
-│       ├── Abstract/
-│       ├── Colors/
-│       ├── Pictures/
-│       ├── Shapes/
-│       ├── index.html
-│       ├── trialManager.js
-│       ├── objectExclusions.js
-│       └── webgazer.js
-├── scripts/
-│   ├── runexperiment.bat
-│   └── runexperiment.ps1
-└── runexperiment.sh
-```
+1. Enter participant initials when prompted
+2. Select the stimulus type (Shapes, Colors, Abstract, or Pictures)
+3. Choose the number of trials to run (10-50)
+4. Complete the calibration phase by looking at and clicking yellow dots
+5. The experiment will run automatically, presenting stimuli and recording gaze data
+6. Upon completion, data will be saved locally and downloaded as a JSON file
 
-## Analysis Script
+---
 
-This project contains tools and scripts designed for generating detailed visualizations and statistical summaries of the GazeTracking data collected by this app.
+## Technical Details
 
-- **Description:** A Python script that processes data (e.g., JSON inputs), performs statistical analysis, and generates Markdown reports with visualizations.
-- **Features:**
-  - Generates scatter plots and violin plots to visualize data trends.
-  - Performs statistical tests including Wilcoxon, T-tests, and ANOVA.
-  - Creates descriptive statistical summaries.
-  - Outputs a Markdown report summarizing results with inline images of the generated plots.
-- **Usage:**
-  1. Prepare a JSON file with the required format (e.g., trial data).
-  2. Run the script with:
+### Core Components
+
+- **index.html:** Main experiment interface, loads scripts and manages UI
+- **trialManager.js:** Controls experiment flow, trial management, and data collection
+- **webgazer.js:** Webcam-based eye tracking
+- **localforage.min.js:** Client-side data storage
+- **objectExclusions.js:** Defines which objects should not appear together in trials
+
+### Eye Tracking
+
+Uses WebGazer.js for webcam-based eye tracking. Calibration requires participants to look at and click on a series of points to improve gaze prediction accuracy.
+
+### Trial Types
+
+1. **Type 1:** Target object with two identical distractors
+2. **Type 2:** Target object with two different distractors
+
+### Data Collection
+
+Each trial records:
+
+- Trial number and type
+- Start and end timestamps
+- Object identifiers and positions
+- Continuous gaze coordinates with timestamps
+
+### Data Storage
+
+- Locally using localforage
+- Downloaded as a JSON file: `[INITIALS]_[TIMESTAMP]_data.json`
+
+### Analysis Script
+
+A Python script (`AnalysisPlotting.py`) is provided for generating visualizations and statistical summaries from collected data.
+
+**Usage:**
 
 ```bash
-    python AnalysisPlotting.py <path_to_json>
+python AnalysisPlotting.py <path_to_json>
 ```
 
-  3. Check the `./experimentalData/<filename>` directory for the generated report and plots.
+Check the `./experimentalData/<filename>` directory for the generated report and plots.
+
+---
+
+## Troubleshooting
+
+### Camera Access Issues
+
+- Ensure your browser has permission to access the webcam
+- Check that no other applications are using the webcam
+- Try a different browser if issues persist
+
+### Server Issues
+
+- Verify `http-server` is installed: `npm list -g http-server`
+- Ensure `cert.pem` and `key.pem` are in the correct location and readable
+- Check that port 8080 is available: `lsof -i :8080`
+- If port is in use, modify the port in the script or close the other application
+
+### Browser Compatibility
+
+- Use Chrome, Firefox, or Edge for best compatibility
+- Ensure your browser is up to date
 
 ---
 
 ## How to Contribute
 
-We welcome contributions to improve the Gaze Analysis Experiment Manager! Here's how you can help:
+We welcome contributions! Here's how you can help:
 
 ### Contribution Guidelines
 
@@ -214,22 +235,13 @@ We welcome contributions to improve the Gaze Analysis Experiment Manager! Here's
 
 ### Areas for Contribution
 
-- **Core Features**
-  - New trial types
-  - Additional analysis tools
-  - Enhanced calibration methods
+- New trial types
+- Additional analysis tools
+- Enhanced calibration methods
+- Documentation (usage examples, API docs, tutorials)
+- Testing (unit, integration, browser compatibility)
 
-- **Documentation**
-  - Usage examples
-  - API documentation
-  - Tutorial content
-
-- **Testing**
-  - Unit tests
-  - Integration tests
-  - Browser compatibility testing
-
-### Getting Started
+#### Getting Started
 
 1. Check existing issues
 2. Discuss major changes first
@@ -239,6 +251,8 @@ We welcome contributions to improve the Gaze Analysis Experiment Manager! Here's
 
 For questions or help, open an issue or contact the maintainers.
 
+---
+
 ## License
 
 Copyright 2024-11-30 Michael Ryan Hunsaker, M.Ed., Ph.D.
@@ -247,7 +261,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://www.apache.org/licenses/LICENSE-2.0
+<https://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
