@@ -104,7 +104,7 @@ function Check-Requirements {
     }
 
     # Check Microsoft Edge, Google Chrome, or Firefox
-    if (-not (Get-Command msedge -ErrorAction SilentlyContinue) -and -not (Get-Command chrome -ErrorAction SilentlyContinue) -and -not (Get-Command firefox -ErrorAction SilentlyContinue)) {
+    if (-not (Get-Command "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" -ErrorAction SilentlyContinue) -and -not (Get-Command "C:\Users\Ryan Hunsaker\AppData\Local\Chromium\Application\chrome.exe" -ErrorAction SilentlyContinue) -and -not (Get-Command firefox -ErrorAction SilentlyContinue)) {
         Write-Host "`n${ORANGE}Error: Neither Microsoft Edge, Google Chrome, nor Firefox is installed.${NC}"
         Write-Host "${WHITE}Please install one of these browsers using your system's package manager${NC}"
         exit 1
@@ -194,12 +194,14 @@ if (-not (Test-Path -Path $fullPath -PathType Container)) {
     Write-Host "`n${ORANGE}Error: No directory found for student: $studentDir${NC}"
     Write-Host "${WHITE}Expected path: ${CYAN}$fullPath${NC}"
     exit 1
+}
 fi
 
 # Check if index.html exists
 if (-not (Test-Path -Path "$fullPath/index.html")) {
     Write-Host "`n${ORANGE}Error: No index.html found in student directory${NC}"
     exit 1
+}
 fi
 
 # Start server and launch browser

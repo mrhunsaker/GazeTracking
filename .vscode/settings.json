@@ -1,0 +1,10 @@
+{
+  "python.defaultInterpreterPath": "/var/home/ryhunsaker/GitHubRepos/GazeTracking/.venv/bin/python",
+  "python.analysis.extraPaths": ["."],
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true
+}
+{
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
+}

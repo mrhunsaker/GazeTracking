@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Shape Generator for Eye Gaze Experiment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #4CAF50;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+            margin-top: 10px;
+            min-height: 100px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .progress {
+            margin-top: 10px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .info {
+            background: #1a3a4a;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .preview-item {
+            text-align: center;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+        }
+        .preview-item svg {
+            max-width: 80px;
+            max-height: 80px;
+        }
+        .preview-item p {
+            font-size: 10px;
+            margin: 5px 0 0 0;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>SVG Shape Generator for Eye Gaze Experiment</h1>
+    
+    <div class="info">
+        <h3>Generator Information</h3>
+        <p><strong>Total files to generate:</strong> <span id="totalFiles">0</span></p>
+        <p>This generator creates all required SVG shapes with various colors and aspect ratios for your eye gaze experiment.</p>
+    </div>
+
+    <div class="container">
+        <h2>Generation Controls</h2>
+        <div class="controls">
+            <button onclick="generateAllShapes()">Generate All Shapes</button>
+            <button onclick="generateColoredShapes()">Generate Colored Shapes Only</button>
+            <button onclick="generateRatioShapes()">Generate Ratio Shapes Only</button>
+            <button onclick="clearStatus()">Clear Status</button>
+            <button onclick="downloadAsZip()">Download All as ZIP</button>
+        </div>
+        
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+            </div>
+        </div>
+        
+        <div class="status" id="status">
+            Ready to generate shapes...
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Preview (First 50 shapes)</h2>
+        <div class="preview-grid" id="previewGrid"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        // Shape definitions
+        const shapes = {
+            ellipse: { name: 'ellipse', sides: 0, type: 'ellipse' },
+            circle: { name: 'circle', sides: 0, type: 'circle' },
+            square: { name: 'square', sides: 4, type: 'polygon' },
+            rectangle: { name: 'rectangle', sides: 4, type: 'rect' },
+            triangle: { name: 'triangle', sides: 3, type: 'polygon' },
+            pentagon: { name: 'pentagon', sides: 5, type: 'polygon' },
+            hexagon: { name: 'hexagon', sides: 6, type: 'polygon' },
+            heptagon: { name: 'heptagon', sides: 7, type: 'polygon' },
+            octagon: { name: 'octagon', sides: 8, type: 'polygon' },
+            nonagon: { name: 'nonagon', sides: 9, type: 'polygon' },
+            decagon: { name: 'decagon', sides: 10, type: 'polygon' },
+            hendecagon: { name: 'hendecagon', sides: 11, type: 'polygon' },
+            dodecagon: { name: 'dodecagon', sides: 12, type: 'polygon' }
+        };
+
+        const colors = {
+            white: '#FFFFFF',
+            'red-light': '#FF6B6B',
+            'red-dark': '#C92A2A',
+            'orange-light': '#FFA94D',
+            'orange-dark': '#E8590C',
+            'yellow-light': '#FFE066',
+            'yellow-dark': '#F59F00',
+            'green-light': '#51CF66',
+            'green-dark': '#2F9E44',
+            'blue-light': '#4DABF7',
+            'blue-dark': '#1971C2',
+            'purple-light': '#CC5DE8',
+            'purple-dark': '#9C36B5'
+        };
+
+        const ratios = [1.0, 1.25, 1.5, 1.75, 2.0];
+        const ratioColors = Object.keys(colors);
+
+        let generatedSVGs = new Map();
+        let previewCount = 0;
+        const MAX_PREVIEW = 50;
+
+        function updateProgress(current, total) {
+            const percent = Math.round((current / total) * 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+        }
+
+        function addStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            const p = document.createElement('p');
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            p.style.color = isError ? '#ff6b6b' : '#4CAF50';
+            status.appendChild(p);
+            status.scrollTop = status.scrollHeight;
+        }
+
+        function clearStatus() {
+            document.getElementById('status').innerHTML = 'Status cleared...';
+            updateProgress(0, 1);
+        }
+
+        function addPreview(svg, filename) {
+            if (previewCount >= MAX_PREVIEW) return;
+            
+            const grid = document.getElementById('previewGrid');
+            const item = document.createElement('div');
+            item.className = 'preview-item';
+            item.innerHTML = `
+                ${svg}
+                <p>${filename}</p>
+            `;
+            grid.appendChild(item);
+            previewCount++;
+        }
+
+        function getPolygonPoints(sides, width, height, centerX = 200, centerY = 200) {
+            const points = [];
+            const radiusX = width / 2;
+            const radiusY = height / 2;
+            
+            for (let i = 0; i < sides; i++) {
+                const angle = (i * 2 * Math.PI / sides) - (Math.PI / 2);
+                const x = centerX + radiusX * Math.cos(angle);
+                const y = centerY + radiusY * Math.sin(angle);
+                points.push(`${x},${y}`);
+            }
+            
+            return points.join(' ');
+        }
+
+        function createSVG(shape, width, height, color) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '400');
+            svg.setAttribute('height', '400');
+            svg.setAttribute('viewBox', '0 0 400 400');
+            svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+            let element;
+            const centerX = 200;
+            const centerY = 200;
+
+            if (shape.type === 'circle') {
+                element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                element.setAttribute('cx', centerX);
+                element.setAttribute('cy', centerY);
+                element.setAttribute('r', Math.min(width, height) / 2);
+            } else if (shape.type === 'ellipse') {
+                element = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+                element.setAttribute('cx', centerX);
+                element.setAttribute('cy', centerY);
+                element.setAttribute('rx', width / 2);
+                element.setAttribute('ry', height / 2);
+            } else if (shape.type === 'rect') {
+                element = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                element.setAttribute('x', centerX - width / 2);
+                element.setAttribute('y', centerY - height / 2);
+                element.setAttribute('width', width);
+                element.setAttribute('height', height);
+            } else if (shape.type === 'polygon') {
+                element = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                if (shape.name === 'square') {
+                    const half = Math.min(width, height) / 2;
+                    element.setAttribute('points', getPolygonPoints(4, half * 2, half * 2, centerX, centerY));
+                } else {
+                    element.setAttribute('points', getPolygonPoints(shape.sides, width, height, centerX, centerY));
+                }
+            }
+
+            element.setAttribute('fill', color);
+            element.setAttribute('stroke', 'none');
+            svg.appendChild(element);
+
+            return new XMLSerializer().serializeToString(svg);
+        }
+
+        function generateColoredShapes() {
+            addStatus('Starting colored shapes generation...');
+            generatedSVGs.clear();
+            previewCount = 0;
+            document.getElementById('previewGrid').innerHTML = '';
+            
+            const shapeList = Object.values(shapes);
+            const colorList = Object.entries(colors);
+            const total = shapeList.length * colorList.length;
+            let count = 0;
+
+            shapeList.forEach(shape => {
+                colorList.forEach(([colorName, colorValue]) => {
+                    let width, height;
+                    
+                    if (shape.name === 'ellipse' || shape.name === 'rectangle') {
+                        width = 100;
+                        height = 200;
+                    } else {
+                        width = height = 150;
+                    }
+
+                    const svg = createSVG(shape, width, height, colorValue);
+                    const filename = `${shape.name}-${colorName}.svg`;
+                    generatedSVGs.set(filename, svg);
+                    
+                    count++;
+                    updateProgress(count, total);
+                    
+                    if (count % 10 === 0) {
+                        addStatus(`Generated ${count}/${total} colored shapes`);
+                    }
+                    
+                    addPreview(svg, filename);
+                });
+            });
+
+            addStatus(`✓ Completed colored shapes: ${count} files generated`);
+        }
+
+        function generateRatioShapes() {
+            addStatus('Starting ratio shapes generation...');
+
+            const shapeList = Object.values(shapes);
+            const total = shapeList.length * ratios.length * ratioColors.length;
+            let count = 0;
+            const startCount = generatedSVGs.size;
+
+            shapeList.forEach(shape => {
+                ratios.forEach(ratio => {
+                    ratioColors.forEach(colorName => {
+                        const baseWidth = 100;
+                        const width = baseWidth;
+                        const height = baseWidth * ratio;
+
+                        const colorValue = colors[colorName];
+                        const svg = createSVG(shape, width, height, colorValue);
+                        const filename = `${shape.name}-${ratio.toFixed(2)}-${colorName}.svg`;
+                        generatedSVGs.set(filename, svg);
+
+                        count++;
+                        updateProgress(count, total);
+
+                        if (count % 10 === 0) {
+                            addStatus(`Generated ${count}/${total} ratio shapes`);
+                        }
+
+                        addPreview(svg, filename);
+                    });
+                });
+            });
+
+            addStatus(`✓ Completed ratio shapes: ${generatedSVGs.size - startCount} files generated`);
+        }
+
+        function generateAllShapes() {
+            addStatus('Starting full generation...');
+            generatedSVGs.clear();
+            previewCount = 0;
+            document.getElementById('previewGrid').innerHTML = '';
+            
+            generateColoredShapes();
+            generateRatioShapes();
+            
+            addStatus(`✓ COMPLETE: Total of ${generatedSVGs.size} SVG files generated`);
+            document.getElementById('totalFiles').textContent = generatedSVGs.size;
+        }
+
+        async function downloadAsZip() {
+            if (generatedSVGs.size === 0) {
+                addStatus('No shapes generated yet. Please generate shapes first.', true);
+                return;
+            }
+
+            addStatus('Creating ZIP file...');
+            const zip = new JSZip();
+            
+            generatedSVGs.forEach((svg, filename) => {
+                zip.file(filename, svg);
+            });
+
+            try {
+                const blob = await zip.generateAsync({ type: 'blob' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'experiment-shapes.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                addStatus('✓ ZIP file downloaded successfully');
+            } catch (error) {
+                addStatus(`Error creating ZIP: ${error.message}`, true);
+            }
+        }
+
+            // Calculate total files on load
+            window.addEventListener('load', () => {
+                const coloredShapes = Object.keys(shapes).length * Object.keys(colors).length;
+                // compute ratio shapes including dark variants where applicable
+                let ratioShapes = 0;
+                Object.keys(shapes).forEach(() => {
+                    ratios.forEach(() => {
+                        ratioColors.forEach(colorName => {
+                            ratioShapes += 1;
+                            if (colorName.endsWith('-light')) {
+                                const darkName = colorName.replace('-light', '-dark');
+                                if (colors[darkName]) ratioShapes += 1;
+                            }
+                        });
+                    });
+                });
+                const total = coloredShapes + ratioShapes;
+                document.getElementById('totalFiles').textContent = total;
+            });
+    </script>
+</body>
+</html>

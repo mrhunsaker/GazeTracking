@@ -1,0 +1,63 @@
+{
+  "seededRNG": true,
+  "shapes": [
+    "ellipse",
+    "circle",
+    "square",
+    "rectangle",
+    "triangle",
+    "pentagon",
+    "hexagon",
+    "heptagon",
+    "octagon",
+    "nonagon",
+    "decagon",
+    "hendecagon",
+    "dodecagon"
+  ],
+  "colors": [
+    "white",
+    "red-light",
+    "red-dark",
+    "orange-light",
+    "orange-dark",
+    "yellow-light",
+    "yellow-dark",
+    "green-light",
+    "green-dark",
+    "blue-light",
+    "blue-dark",
+    "purple-light",
+    "purple-dark"
+  ],
+  "difficultyLevels": {
+    "easy": ["1.75", "2.00"],
+    "hard": ["1.25", "1.50"]
+  },
+  "practice": {
+    "enabled": true,
+    "blocks": 1,
+    "trialsPerBlock": 8,
+    "allowColorRepeat": true
+  },
+  "blocks": 4,
+  "trialsPerBlock": 10,
+  "restSecondsBetweenBlocks": 2.0,
+  "counterbalancing": {
+    "type": "latin-square",
+    "factor": "difficulty"
+  },
+  "constraints": {
+    "targetRatio": "1.00",
+    "foilSameShape": true,
+    "noColorRepeatAcrossBlocks": true
+  }
+  ,
+  "timings": {
+    "centerMs": 2500,
+    "blankMs": 2000,
+    "choiceMs": 10000,
+    "interTrialMs": 2000,
+    "sampleIntervalMs": 250
+  }
+}

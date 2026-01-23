@@ -1,0 +1,26 @@
+name: CI
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies (none required)
+        run: echo "No npm install required"
+
+      - name: Run sanity check
+        run: node StudentFolders/Experiment/sanity_check_shapes.js
+
+      - name: Run unit tests
+        run: node tests/run_unit_tests.js

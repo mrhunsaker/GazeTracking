@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "eye-gaze-analysis"
-version = "2025.02.08"
+version = "2026.1.1-beta"
 authors = ["Michael Ryan Hunsaker <hunsakerconsulting@gmail.com>"]
 description = "Data collection application for Teachers of Students with Visual Impairments"
 maintainers = ["Michael Ryan Hunsaker, M.Ed., Ph.D. <hunsakerconsulting@gmail.com>"]
@@ -32,6 +32,9 @@ seaborn = "^0.13.2"
 pandas = "^2.2.3"
 argparse = "^1.4.0"
 pathlib = "^1.0.1"
+pylint = "^4.0.4"
+black = "^26.1.0"
+ruff = "^0.14.14"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

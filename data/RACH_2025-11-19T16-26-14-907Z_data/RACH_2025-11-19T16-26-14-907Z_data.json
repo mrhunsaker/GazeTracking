@@ -1,0 +1,307 @@
+{
+  "trialData": [
+    {
+      "trialNumber": 1,
+      "type": "1",
+      "startTime": 1763569424882,
+      "object1": 2,
+      "testObjects": [
+        6,
+        1,
+        2
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 6,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 1,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 2,
+          "isTarget": true
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569439884
+    },
+    {
+      "trialNumber": 2,
+      "type": "2",
+      "startTime": 1763569439884,
+      "object1": 2,
+      "testObjects": [
+        2,
+        3,
+        4
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 2,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 3,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 4,
+          "isTarget": false
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569454885
+    },
+    {
+      "trialNumber": 3,
+      "type": "1",
+      "startTime": 1763569454885,
+      "object1": 1,
+      "testObjects": [
+        1,
+        7,
+        9
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 1,
+          "isTarget": true
+        },
+        {
+          "position": "center",
+          "objectNum": 7,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 9,
+          "isTarget": false
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569469887
+    },
+    {
+      "trialNumber": 4,
+      "type": "2",
+      "startTime": 1763569469887,
+      "object1": 4,
+      "testObjects": [
+        9,
+        1,
+        4
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 9,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 1,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 4,
+          "isTarget": true
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569484890
+    },
+    {
+      "trialNumber": 5,
+      "type": "1",
+      "startTime": 1763569484890,
+      "object1": 6,
+      "testObjects": [
+        5,
+        6,
+        7
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 5,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 6,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 7,
+          "isTarget": false
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569499892
+    },
+    {
+      "trialNumber": 6,
+      "type": "2",
+      "startTime": 1763569499892,
+      "object1": 5,
+      "testObjects": [
+        8,
+        1,
+        5
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 8,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 1,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 5,
+          "isTarget": true
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569514894
+    },
+    {
+      "trialNumber": 7,
+      "type": "1",
+      "startTime": 1763569514894,
+      "object1": 3,
+      "testObjects": [
+        5,
+        3,
+        7
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 5,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 3,
+          "isTarget": true
+        },
+        {
+          "position": "right",
+          "objectNum": 7,
+          "isTarget": false
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569529895
+    },
+    {
+      "trialNumber": 8,
+      "type": "2",
+      "startTime": 1763569529895,
+      "object1": 2,
+      "testObjects": [
+        9,
+        6,
+        2
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 9,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 6,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 2,
+          "isTarget": true
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569544899
+    },
+    {
+      "trialNumber": 9,
+      "type": "1",
+      "startTime": 1763569544899,
+      "object1": 1,
+      "testObjects": [
+        9,
+        4,
+        1
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 9,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 4,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 1,
+          "isTarget": true
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569559901
+    },
+    {
+      "trialNumber": 10,
+      "type": "2",
+      "startTime": 1763569559901,
+      "object1": 7,
+      "testObjects": [
+        8,
+        2,
+        7
+      ],
+      "positions": [
+        {
+          "position": "left",
+          "objectNum": 8,
+          "isTarget": false
+        },
+        {
+          "position": "center",
+          "objectNum": 2,
+          "isTarget": false
+        },
+        {
+          "position": "right",
+          "objectNum": 7,
+          "isTarget": true
+        }
+      ],
+      "gazeData": [],
+      "endTime": 1763569574902
+    }
+  ],
+  "gazeData": [],
+  "timestamp": 1763569574902,
+  "totalTrials": 10
+}

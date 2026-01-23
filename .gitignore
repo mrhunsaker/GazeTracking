@@ -125,3 +125,4 @@ eslint.config.mjs
 .prettierrc
 .prettierignore
 
+*.svg
