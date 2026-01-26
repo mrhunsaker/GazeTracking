@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties Reference - GazeTracking API</title>
+    <link rel="stylesheet" href="../css/maven-theme.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GazeTracking - Eye Tracking Experiment Platform</h1>
+            <div class="version">Version 2025.1.0 | Last Published: January 26, 2026</div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="../index.html">Overview</a></li>
+                <li><a href="trial-manager.html">TrialManager</a></li>
+                <li><a href="methods.html">Methods</a></li>
+                <li><a href="properties.html" class="active">Properties</a></li>
+                <li><a href="quick-start.html">Quick Start</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumbs">
+            <a href="../index.html">Home</a> <span>›</span> <a href="properties.html">API Reference</a> <span>›</span> Properties
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <div class="search-box">
+                    <input type="text" placeholder="Search properties..." id="searchInput">
+                </div>
+
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#core">Core Properties</a></li>
+                    <li><a href="#experiment">Experiment State</a></li>
+                    <li><a href="#calibration">Calibration</a></li>
+                    <li><a href="#gaze">Gaze Tracking</a></li>
+                    <li><a href="#images">Image Management</a></li>
+                    <li><a href="#ui">UI Elements</a></li>
+                </ul>
+            </aside>
+
+            <main class="main-content">
+                <h1>Properties Reference</h1>
+
+                <p>Complete reference of all properties in the TrialManager class, organized by functional category.</p>
+
+                <h2 id="core">Core Properties</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>participantId</code></td>
+                            <td>number</td>
+                            <td>0</td>
+                            <td>Unique identifier for the participant. Used for seeded randomization and data tracking.</td>
+                        </tr>
+                        <tr>
+                            <td><code>userInitials</code></td>
+                            <td>string</td>
+                            <td>''</td>
+                            <td>Participant initials (max 6 chars). Used in data export filename generation.</td>
+                        </tr>
+                        <tr>
+                            <td><code>testType</code></td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>Type of stimulus: 'Shapes', 'Colors', 'Abstract', or 'Pictures'. Determines image set to load.</td>
+                        </tr>
+                        <tr>
+                            <td><code>totalImages</code></td>
+                            <td>number</td>
+                            <td>null</td>
+                            <td>Total number of images available for selected test type. Shapes: 193, Colors: 10, Abstract: 403.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="experiment">Experiment State Properties</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>trialData</code></td>
+                            <td>Array</td>
+                            <td>[]</td>
+                            <td>Collection of all completed trial results including timing, objects shown, positions, and gaze data.</td>
+                        </tr>
+                        <tr>
+                            <td><code>currentTrialData</code></td>
+                            <td>Object</td>
+                            <td>{}</td>
+                            <td>Data for the currently executing trial. Contains trialNumber, type, startTime, objects, positions.</td>
+                        </tr>
+                        <tr>
+                            <td><code>currentTrial</code></td>
+                            <td>number</td>
+                            <td>0</td>
+                            <td>Index of currently executing trial (0-based). Increments after each trial completes.</td>
+                        </tr>
+                        <tr>
+                            <td><code>trialCount</code></td>
+                            <td>number</td>
+                            <td>null</td>
+                            <td>Total number of trials to execute. User-selected from 10-50 during initialization.</td>
+                        </tr>
+                        <tr>
+                            <td><code>trialTypes</code></td>
+                            <td>Array</td>
+                            <td>["1", "2"]</td>
+                            <td>Available trial types. Type 1: target + 2 identical foils. Type 2: target + 2 different foils.</td>
+                        </tr>
+                        <tr>
+                            <td><code>isExperimentStarted</code></td>
+                            <td>boolean</td>
+                            <td>false</td>
+                            <td>Flag indicating whether experiment trials have begun (post-calibration).</td>
+                        </tr>
+                        <tr>
+                            <td><code>currentBlockIndex</code></td>
+                            <td>number</td>
+                            <td>0</td>
+                            <td>Index of current block in multi-block experiments (Experiment folder only).</td>
+                        </tr>
+                        <tr>
+                            <td><code>currentTrialIndex</code></td>
+                            <td>number</td>
+                            <td>0</td>
+                            <td>Index within current block (Experiment folder only).</td>
+                        </tr>
+                        <tr>
+                            <td><code>isPractice</code></td>
+                            <td>boolean</td>
+                            <td>false</td>
+                            <td>Flag for practice trial mode (Experiment folder only).</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="calibration">Calibration Properties</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>calibrationComplete</code></td>
+                            <td>boolean</td>
+                            <td>false</td>
+                            <td>Flag indicating successful completion of initial calibration with validation.</td>
+                        </tr>
+                        <tr>
+                            <td><code>calibrationInProgress</code></td>
+                            <td>boolean</td>
+                            <td>false</td>
+                            <td>Flag preventing multiple simultaneous calibration sequences.</td>
+                        </tr>
+                        <tr>
+                            <td><code>CALIBRATION_POINTS</code></td>
+                            <td>number</td>
+                            <td>10</td>
+                            <td>Number of calibration points in initial sequence (typically 9-10 in grid pattern).</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="gaze">Gaze Tracking Properties</h2>
+
+                <h3>Data Storage</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>gazeData</code></td>
+                            <td>Array</td>
+                            <td>[]</td>
+                            <td>Legacy property for gaze data collection (maintained for compatibility).</td>
+                        </tr>
+                        <tr>
+                            <td><code>currentGazeData</code></td>
+                            <td>Array</td>
+                            <td>[]</td>
+                            <td>Gaze points collected during current trial. Reset at start of each trial.</td>
+                        </tr>
+                        <tr>
+                            <td><code>allGazeData</code></td>
+                            <td>Array</td>
+                            <td>[]</td>
+                            <td>Complete collection of all gaze points across entire session (calibration + experiment).</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Kalman Filtering</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>kalmanX</code></td>
+                            <td>Object</td>
+                            <td>null</td>
+                            <td>Kalman filter state for X coordinate. Contains: {q: 0.01, r: 0.1, p: 1, x: 0, k: 0}</td>
+                        </tr>
+                        <tr>
+                            <td><code>kalmanY</code></td>
+                            <td>Object</td>
+                            <td>null</td>
+                            <td>Kalman filter state for Y coordinate. Same structure as kalmanX.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info">
+                    <strong>Kalman Filter Parameters:</strong>
+                    <ul>
+                        <li><strong>q</strong> (process noise): 0.01 - Model uncertainty</li>
+                        <li><strong>r</strong> (measurement noise): 0.1 - Sensor uncertainty</li>
+                        <li><strong>p</strong> (estimation error): 1 - Initial uncertainty</li>
+                        <li><strong>x</strong> (estimated value): 0 - Current filtered coordinate</li>
+                        <li><strong>k</strong> (Kalman gain): 0 - Optimal gain computation</li>
+                    </ul>
+                </div>
+
+                <h3>Head Pose Tracking</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>baselineHeadPose</code></td>
+                            <td>Object | null</td>
+                            <td>null</td>
+                            <td>Baseline head pose angles captured at calibration start. All subsequent measurements relative to this.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Outlier Detection</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>recentGazePoints</code></td>
+                            <td>Array</td>
+                            <td>[]</td>
+                            <td>Circular buffer of last 5 gaze points for velocity-based outlier detection.</td>
+                        </tr>
+                        <tr>
+                            <td><code>maxRecentPoints</code></td>
+                            <td>number</td>
+                            <td>5</td>
+                            <td>Maximum size of recentGazePoints buffer. Maintains most recent points for jump detection.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Adaptive Sampling</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>lastSampleTime</code></td>
+                            <td>number</td>
+                            <td>0</td>
+                            <td>Timestamp of last processed gaze sample (milliseconds). Used to implement adaptive sampling rate.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-success">
+                    <strong>Adaptive Sampling Logic:</strong> System adjusts frame rate based on movement speed:
+                    <ul>
+                        <li><strong>Fast movement</strong> (&gt;100px/s): 60fps (16ms intervals)</li>
+                        <li><strong>Slow movement</strong> (≤100px/s): 30fps (33ms intervals)</li>
+                    </ul>
+                </div>
+
+                <h2 id="images">Image Management Properties</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>objectImages</code></td>
+                            <td>Object</td>
+                            <td>{}</td>
+                            <td>Dictionary of loaded images. Keys: object numbers (1-totalImages), Values: HTMLImageElement.</td>
+                        </tr>
+                        <tr>
+                            <td><code>objectExclusions_Shapes</code></td>
+                            <td>Object</td>
+                            <td>{}</td>
+                            <td>Exclusion rules for Shapes test type. Maps object numbers to arrays of similar objects.</td>
+                        </tr>
+                        <tr>
+                            <td><code>objectExclusions_Colors</code></td>
+                            <td>Object</td>
+                            <td>{}</td>
+                            <td>Exclusion rules for Colors test type.</td>
+                        </tr>
+                        <tr>
+                            <td><code>objectExclusions_Abstract</code></td>
+                            <td>Object</td>
+                            <td>{}</td>
+                            <td>Exclusion rules for Abstract test type.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Example Exclusion Structure</h3>
+                <pre><code>{
+  1: [2, 3, 15],     // Object 1 cannot appear with objects 2, 3, or 15
+  2: [1, 4],         // Object 2 cannot appear with objects 1 or 4
+  // ... etc
+}</code></pre>
+
+                <h2 id="ui">UI Element Properties</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>testContainer</code></td>
+                            <td>HTMLElement</td>
+                            <td>null</td>
+                            <td>Main container div for displaying stimuli. Retrieved from DOM: <code>#test-container</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>instructionElement</code></td>
+                            <td>HTMLElement</td>
+                            <td>null</td>
+                            <td>Element for displaying instructions. Retrieved from DOM: <code>#instruction</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>_lastMousePos</code></td>
+                            <td>Object</td>
+                            <td>{x: null, y: null}</td>
+                            <td>Last known mouse position for fallback tracking (Experiment folder only).</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Property Access Patterns</h2>
+
+                <h3>Reading Trial Data</h3>
+                <pre><code><span class="comment">// Access current trial information</span>
+<span class="keyword">const</span> currentTrialNum = trialManager.currentTrial + <span class="number">1</span>; <span class="comment">// 1-based for display</span>
+<span class="keyword">const</span> totalTrials = trialManager.trialCount;
+<span class="keyword">const</span> progress = (currentTrialNum / totalTrials * <span class="number">100</span>).toFixed(<span class="number">1</span>) + <span class="string">'%'</span>;
+
+<span class="comment">// Access gaze data for current trial</span>
+<span class="keyword">const</span> currentGaze = trialManager.currentGazeData;
+<span class="keyword">const</span> gazePointCount = currentGaze.length;
+<span class="keyword">const</span> avgX = currentGaze.reduce((sum, p) => sum + p.x, <span class="number">0</span>) / gazePointCount;</code></pre>
+
+                <h3>Checking Calibration Status</h3>
+                <pre><code><span class="keyword">if</span> (trialManager.calibrationComplete) {
+    console.log(<span class="string">'Calibration successful - ready for trials'</span>);
+} <span class="keyword">else</span> <span class="keyword">if</span> (trialManager.calibrationInProgress) {
+    console.log(<span class="string">'Calibration in progress...'</span>);
+} <span class="keyword">else</span> {
+    console.log(<span class="string">'Calibration not started'</span>);
+}</code></pre>
+
+                <h3>Examining Head Pose Data</h3>
+                <pre><code><span class="comment">// Check if head pose tracking is active</span>
+<span class="keyword">if</span> (trialManager.baselineHeadPose) {
+    console.log(<span class="string">'Head pose baseline established'</span>);
+    console.log(<span class="string">'Baseline:'</span>, trialManager.baselineHeadPose);
+}
+
+<span class="comment">// Check recent gaze points for outlier detection</span>
+<span class="keyword">const</span> recentPoints = trialManager.recentGazePoints;
+console.log(<span class="string">`Tracking last ${recentPoints.length} gaze points`</span>);</code></pre>
+
+                <h3>Monitoring Kalman Filter State</h3>
+                <pre><code><span class="comment">// Inspect Kalman filter state</span>
+console.log(<span class="string">'Kalman X state:'</span>, trialManager.kalmanX);
+<span class="comment">// Output: {q: 0.01, r: 0.1, p: 0.95, x: 512.34, k: 0.09}</span>
+
+<span class="comment">// Process noise / measurement noise ratio indicates filter behavior</span>
+<span class="keyword">const</span> filterRatio = trialManager.kalmanX.q / trialManager.kalmanX.r;
+<span class="comment">// Lower ratio = more smoothing, higher ratio = more responsive</span></code></pre>
+
+                <h2>Property Modification Guidelines</h2>
+
+                <div class="alert alert-warning">
+                    <strong>Caution:</strong> Most properties should not be modified directly outside the class. Use provided methods for state changes.
+                </div>
+
+                <h3>Safe to Modify (with care)</h3>
+                <ul>
+                    <li><code>maxRecentPoints</code> - Adjust outlier detection sensitivity (5-10 recommended)</li>
+                    <li><code>CALIBRATION_POINTS</code> - Change before calibration (9-15 recommended)</li>
+                </ul>
+
+                <h3>Never Modify Directly</h3>
+                <ul>
+                    <li><code>trialData</code> - Managed by runTrial()</li>
+                    <li><code>allGazeData</code> - Managed by processGazeData()</li>
+                    <li><code>calibrationComplete</code> - Set by startCalibrationPhase()</li>
+                    <li><code>kalmanX/kalmanY</code> - Managed by kalmanFilter()</li>
+                </ul>
+
+                <h3>Read-Only in Practice</h3>
+                <ul>
+                    <li><code>participantId</code> - Set in constructor</li>
+                    <li><code>totalImages</code> - Set by setupImages()</li>
+                    <li><code>testType</code> - Set by showInitialsDialog()</li>
+                    <li><code>userInitials</code> - Set by showInitialsDialog()</li>
+                </ul>
+
+                <h2>Data Structure Examples</h2>
+
+                <h3>currentTrialData Structure</h3>
+                <pre><code>{
+  trialNumber: <span class="number">5</span>,
+  type: <span class="number">1</span>,
+  startTime: <span class="number">1706284843120</span>,
+  endTime: <span class="number">1706284858125</span>,
+  object1: <span class="number">45</span>,
+  testObjects: [<span class="number">45</span>, <span class="number">127</span>, <span class="number">127</span>],
+  positions: [
+    { position: <span class="string">"left"</span>, objectNum: <span class="number">45</span>, isTarget: <span class="keyword">true</span> },
+    { position: <span class="string">"center"</span>, objectNum: <span class="number">127</span>, isTarget: <span class="keyword">false</span> },
+    { position: <span class="string">"right"</span>, objectNum: <span class="number">127</span>, isTarget: <span class="keyword">false</span> }
+  ],
+  gazeData: [/* array of gaze points for this trial */]
+}</code></pre>
+
+                <h3>Gaze Data Point Structure</h3>
+                <pre><code>{
+  x: <span class="number">512.3</span>,
+  y: <span class="number">384.7</span>,
+  rawX: <span class="number">515.1</span>,
+  rawY: <span class="number">388.2</span>,
+  headPose: {
+    roll: <span class="number">0.05</span>,
+    pitch: <span class="number">-0.02</span>,
+    yaw: <span class="number">0.08</span>,
+    distance: <span class="number">125.4</span>
+  },
+  time: <span class="number">1706284847123</span>,
+  relativeTime: <span class="number">2543</span>,
+  phase: <span class="string">"experiment"</span>
+}</code></pre>
+
+                <h2>See Also</h2>
+                <ul>
+                    <li><a href="trial-manager.html">TrialManager Class Overview</a></li>
+                    <li><a href="methods.html">Methods Reference</a></li>
+                    <li><a href="gaze-tracking.html">Gaze Tracking Deep Dive</a></li>
+                    <li><a href="quick-start.html">Quick Start Guide</a></li>
+                </ul>
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Ryan Hunsaker, M.Ed., Ph.D. All Rights Reserved.</p>
+            <p>Licensed under the Apache License, Version 2.0</p>
+            <p>Generated: January 26, 2026 | <a href="https://github.com/mrhunsaker/GazeTracking">GitHub Repository</a></p>
+        </div>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop">↑</div>
+
+    <script>
+        const scrollTop = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollTop.classList.toggle('visible', window.pageYOffset > 300);
+        });
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Search filter
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const tables = document.querySelectorAll('table tbody tr');
+            tables.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

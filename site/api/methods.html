@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methods Reference - GazeTracking API</title>
+    <link rel="stylesheet" href="../css/maven-theme.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GazeTracking - Eye Tracking Experiment Platform</h1>
+            <div class="version">Version 2025.1.0 | Last Published: January 26, 2026</div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="../index.html">Overview</a></li>
+                <li><a href="trial-manager.html">TrialManager</a></li>
+                <li><a href="methods.html" class="active">Methods</a></li>
+                <li><a href="properties.html">Properties</a></li>
+                <li><a href="quick-start.html">Quick Start</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumbs">
+            <a href="../index.html">Home</a> <span>›</span> <a href="methods.html">API Reference</a> <span>›</span> Methods
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <div class="search-box">
+                    <input type="text" placeholder="Search methods..." id="searchInput">
+                </div>
+
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#initialization">Initialization</a></li>
+                    <li><a href="#calibration">Calibration</a></li>
+                    <li><a href="#gaze-processing">Gaze Processing</a></li>
+                    <li><a href="#trial-management">Trial Management</a></li>
+                    <li><a href="#utilities">Utilities</a></li>
+                </ul>
+            </aside>
+
+            <main class="main-content">
+                <h1>Methods Reference</h1>
+
+                <p>Complete alphabetical reference of all methods in the TrialManager class. Methods are organized by category for easier navigation.</p>
+
+                <h2 id="initialization">Initialization Methods</h2>
+
+                <div class="method">
+                    <h3>initializeExperiment()</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">export function initializeExperiment(): void</div>
+                    
+                    <div class="method-description">
+                        <p>Top-level function that sets up event listeners and orchestrates the experiment initialization sequence.</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>void</strong> - No return value</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>initWebGazer()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async initWebGazer(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Initializes WebGazer with enhanced configuration including ridge regression, TFFacemesh tracking, and adaptive sampling.</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when initialization complete</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>initializeExclusions()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async initializeExclusions(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Dynamically imports object exclusion rules based on selected test type (Shapes/Colors/Abstract/Pictures).</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves after exclusions loaded</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>showInitialsDialog()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async showInitialsDialog(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Displays modal dialog for collecting participant initials, test type, and trial count.</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when dialog submitted</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>setupImages()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async setupImages(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Loads all stimulus images for selected test type. Image counts: Abstract (403), Shapes (193), Colors (10), Pictures (10).</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when all images loaded</p>
+                    </div>
+                    
+                    <div class="throws-info">
+                        <h4>Throws</h4>
+                        <p><strong>Error</strong> - If unknown test type or image loading fails</p>
+                    </div>
+                </div>
+
+                <h2 id="calibration">Calibration Methods</h2>
+
+                <div class="method">
+                    <h3>startCalibrationPhase()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async startCalibrationPhase(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Executes 9-point calibration sequence with automatic validation and refinement.</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when calibration complete</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>validateCalibration()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async validateCalibration(): Promise&lt;number&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Tests calibration quality at 5 validation points and returns normalized quality score (0-1).</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;number&gt;</strong> - Quality score: 1 - (avgError / 200)</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>measureCalibrationError(point)</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async measureCalibrationError(point: Object): Promise&lt;number&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Measures average prediction error at a specific screen point by collecting 10 samples.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">point</span> <span class="param-type">(Object)</span>
+                            <p>Screen coordinates to test: <code>{x: number, y: number}</code></p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;number&gt;</strong> - Average error distance in pixels</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>refineCalibration()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async refineCalibration(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Adds 3 refinement calibration points in high-error areas. Called automatically if quality < 0.75.</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when refinement complete</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>quickRecalibration()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async quickRecalibration(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Performs fast 3-point recalibration. Called automatically every 10 trials during experiments.</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when recalibration complete</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>runCalibrationSequence(points, showCount)</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async runCalibrationSequence(points: Array, showCount: boolean = true): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Internal helper that displays calibration points sequentially and records clicks.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">points</span> <span class="param-type">(Array)</span>
+                            <p>Array of calibration points: <code>[{x: 0-1, y: 0-1}, ...]</code></p>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">showCount</span> <span class="param-type">(boolean, optional)</span>
+                            <p>Whether to display remaining point counter. Default: true</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when all points clicked</p>
+                    </div>
+                </div>
+
+                <h2 id="gaze-processing">Gaze Processing Methods</h2>
+
+                <div class="method">
+                    <h3>processGazeData(gazePoint, trialStartTime)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">processGazeData(gazePoint: Object, trialStartTime: number): void</div>
+                    
+                    <div class="method-description">
+                        <p>Core gaze processing pipeline: outlier detection → head pose compensation → Kalman filtering → data enrichment → storage.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">gazePoint</span> <span class="param-type">(Object)</span>
+                            <p>Raw gaze coordinates: <code>{x: number, y: number}</code></p>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">trialStartTime</span> <span class="param-type">(number)</span>
+                            <p>Trial start timestamp (milliseconds since epoch)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>void</strong> - Stores data in <code>currentGazeData</code> and <code>allGazeData</code></p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>initKalmanFilter()</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">initKalmanFilter(): void</div>
+                    
+                    <div class="method-description">
+                        <p>Initializes Kalman filter states for X and Y coordinates with tuned parameters (q=0.01, r=0.1).</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>void</strong> - Sets <code>this.kalmanX</code> and <code>this.kalmanY</code></p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>kalmanFilter(measurement, kalmanState)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">kalmanFilter(measurement: number, kalmanState: Object): number</div>
+                    
+                    <div class="method-description">
+                        <p>Applies Kalman filter algorithm to smooth a single coordinate measurement.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">measurement</span> <span class="param-type">(number)</span>
+                            <p>Raw measured value (x or y coordinate)</p>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">kalmanState</span> <span class="param-type">(Object)</span>
+                            <p>Filter state object: <code>{q, r, p, x, k}</code></p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>number</strong> - Filtered coordinate value</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>compensateForHeadMovement(gazePoint, headPoseData)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">compensateForHeadMovement(gazePoint: Object, headPoseData: Object): Object</div>
+                    
+                    <div class="method-description">
+                        <p>Applies head pose compensation and Kalman filtering to raw gaze coordinates.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">gazePoint</span> <span class="param-type">(Object)</span>
+                            <p>Raw gaze point: <code>{x: number, y: number}</code></p>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">headPoseData</span> <span class="param-type">(Object, optional)</span>
+                            <p>Head pose angles (currently used for logging only)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Object</strong> - Compensated coordinates: <code>{x: number, y: number}</code></p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>isOutlier(gazePoint)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">isOutlier(gazePoint: Object): boolean</div>
+                    
+                    <div class="method-description">
+                        <p>Detects outliers based on off-screen position (±100px buffer) or excessive velocity (>500px jumps).</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">gazePoint</span> <span class="param-type">(Object)</span>
+                            <p>Gaze point to check: <code>{x: number, y: number}</code></p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>boolean</strong> - true if point is outlier, false otherwise</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>calculateHeadPose(faceMesh)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">calculateHeadPose(faceMesh: Array): Object | null</div>
+                    
+                    <div class="method-description">
+                        <p>Calculates head pose angles (roll, pitch, yaw) and face distance from TFFacemesh 468-point landmarks.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">faceMesh</span> <span class="param-type">(Array)</span>
+                            <p>Facial landmark array from TFFacemesh (468 points)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Object | null</strong> - Head pose data: <code>{roll, pitch, yaw, distance}</code> or null if invalid</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>extractHeadPoseFeatures(faceMesh)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">extractHeadPoseFeatures(faceMesh: Array): Object</div>
+                    
+                    <div class="method-description">
+                        <p>Extracts raw head pose angles from key facial landmarks (nose: 1, left eye: 33, right eye: 263).</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">faceMesh</span> <span class="param-type">(Array)</span>
+                            <p>Facial landmark array</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Object</strong> - Raw angles: <code>{roll: number, pitch: number, yaw: number}</code></p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>calculateFaceDistance(faceMesh)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">calculateFaceDistance(faceMesh: Array): number</div>
+                    
+                    <div class="method-description">
+                        <p>Calculates approximate face distance from camera using inter-eye distance as proxy.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">faceMesh</span> <span class="param-type">(Array)</span>
+                            <p>Facial landmark array</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>number</strong> - Distance metric (larger = closer to camera)</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>shouldProcessSample(data)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">shouldProcessSample(data: Object): boolean</div>
+                    
+                    <div class="method-description">
+                        <p>Implements adaptive sampling: 60fps (16ms) for fast movement (>100px/s), 30fps (33ms) for slow movement.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">data</span> <span class="param-type">(Object)</span>
+                            <p>Gaze data with coordinates: <code>{x: number, y: number}</code></p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>boolean</strong> - true if sample should be processed, false to skip</p>
+                    </div>
+                </div>
+
+                <h2 id="trial-management">Trial Management Methods</h2>
+
+                <div class="method">
+                    <h3>startExperiment()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async startExperiment(): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Main experiment loop. Executes all trials with periodic recalibration, then saves/exports data.</p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when experiment complete and data saved</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>runTrial(trialType)</h3>
+                    <span class="badge badge-async">ASYNC</span>
+                    
+                    <div class="method-signature">async runTrial(trialType: number): Promise&lt;void&gt;</div>
+                    
+                    <div class="method-description">
+                        <p>Executes a single trial: display sample object → delay → display test objects → collect gaze data → store results.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">trialType</span> <span class="param-type">(number)</span>
+                            <p>Trial type: 1 (target + 2 identical foils) or 2 (target + 2 different foils)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when trial complete</p>
+                    </div>
+                </div>
+
+                <h2 id="utilities">Utility Methods</h2>
+
+                <div class="method">
+                    <h3>seededRandom(seed)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">seededRandom(seed: number): Function</div>
+                    
+                    <div class="method-description">
+                        <p>Creates a deterministic pseudo-random number generator seeded by participant ID.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">seed</span> <span class="param-type">(number)</span>
+                            <p>Seed value (typically participant ID)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Function</strong> - PRNG function returning values 0-1</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>generateFileName()</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">generateFileName(): string</div>
+                    
+                    <div class="method-description">
+                        <p>Generates data export filename with format: <code>{INITIALS}_{ISO_TIMESTAMP}_data.json</code></p>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>string</strong> - Generated filename</p>
+                    </div>
+                    
+                    <h4>Example Output</h4>
+                    <pre><code>"PS_2025-01-26T15-30-45-123Z_data.json"</code></pre>
+                </div>
+
+                <div class="method">
+                    <h3>shuffleArray(array)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">shuffleArray(array: Array): Array</div>
+                    
+                    <div class="method-description">
+                        <p>Fisher-Yates shuffle algorithm for randomizing array order in-place.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">array</span> <span class="param-type">(Array)</span>
+                            <p>Array to shuffle</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Array</strong> - Shuffled array (same reference)</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>getRandomObjectNumber(exclude)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">getRandomObjectNumber(exclude: Array): number</div>
+                    
+                    <div class="method-description">
+                        <p>Selects random object number from valid range, excluding specified objects.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">exclude</span> <span class="param-type">(Array)</span>
+                            <p>Array of object numbers to exclude from selection</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>number</strong> - Random object number (1 to totalImages)</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>getExcludedObjects(objectNum)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">getExcludedObjects(objectNum: number): Array</div>
+                    
+                    <div class="method-description">
+                        <p>Retrieves list of objects that should not appear together with specified object (perceptually similar items).</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">objectNum</span> <span class="param-type">(number)</span>
+                            <p>Object number to get exclusions for</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Array</strong> - Array of excluded object numbers</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>createImage(objectNum)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">createImage(objectNum: number): HTMLImageElement</div>
+                    
+                    <div class="method-description">
+                        <p>Creates HTMLImageElement for specified object with proper path and class.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">objectNum</span> <span class="param-type">(number)</span>
+                            <p>Object number (1 to totalImages)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>HTMLImageElement</strong> - Configured image element</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>showCentered(element)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">showCentered(element: HTMLElement): void</div>
+                    
+                    <div class="method-description">
+                        <p>Positions element at center of test container and displays it.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">element</span> <span class="param-type">(HTMLElement)</span>
+                            <p>Element to center and show</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>void</strong> - Modifies DOM directly</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>showBlackScreen(duration)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">showBlackScreen(duration: number = 1000): void</div>
+                    
+                    <div class="method-description">
+                        <p>Displays black overlay screen for specified duration (inter-stimulus interval).</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">duration</span> <span class="param-type">(number, optional)</span>
+                            <p>Display duration in milliseconds. Default: 1000</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>void</strong> - Screen removed automatically after duration</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>hide(element)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">hide(element: HTMLElement): void</div>
+                    
+                    <div class="method-description">
+                        <p>Hides element by setting display style to "none".</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">element</span> <span class="param-type">(HTMLElement)</span>
+                            <p>Element to hide</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>void</strong> - Modifies element style</p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>positionTestObjects(objects)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+                    
+                    <div class="method-signature">positionTestObjects(objects: Array): void</div>
+                    
+                    <div class="method-description">
+                        <p>Positions array of 3 test objects horizontally (left, center, right) and vertically centered.</p>
+                    </div>
+                    
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">objects</span> <span class="param-type">(Array)</span>
+                            <p>Array of 3 HTMLElements to position</p>
+                        </div>
+                    </div>
+                    
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>void</strong> - Modifies element positions</p>
+                    </div>
+                    
+                    <h4>Layout</h4>
+                    <pre><code>objects[0]: left   (containerWidth/2 - 200 - 30% offset)
+objects[1]: center (containerWidth/2 - 200)
+objects[2]: right  (containerWidth/2 - 200 + 30% offset)</code></pre>
+                </div>
+
+                <h2>See Also</h2>
+                <ul>
+                    <li><a href="trial-manager.html">TrialManager Class Overview</a></li>
+                    <li><a href="properties.html">Properties Reference</a></li>
+                    <li><a href="gaze-tracking.html">Gaze Tracking Deep Dive</a></li>
+                    <li><a href="quick-start.html">Quick Start Guide</a></li>
+                </ul>
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Ryan Hunsaker, M.Ed., Ph.D. All Rights Reserved.</p>
+            <p>Licensed under the Apache License, Version 2.0</p>
+            <p>Generated: January 26, 2026 | <a href="https://github.com/mrhunsaker/GazeTracking">GitHub Repository</a></p>
+        </div>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop">↑</div>
+
+    <script>
+        const scrollTop = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollTop.classList.toggle('visible', window.pageYOffset > 300);
+        });
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Search filter
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const methods = document.querySelectorAll('.method');
+            methods.forEach(method => {
+                const text = method.textContent.toLowerCase();
+                method.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

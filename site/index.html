@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GazeTracking API Documentation</title>
+    <link rel="stylesheet" href="css/maven-theme.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GazeTracking - Eye Tracking Experiment Platform</h1>
+            <div class="version">Version 2025.1.0 | Last Published: January 26, 2026</div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html" class="active">Overview</a></li>
+                <li><a href="api/trial-manager.html">TrialManager</a></li>
+                <li><a href="api/methods.html">Methods</a></li>
+                <li><a href="api/properties.html">Properties</a></li>
+                <li><a href="api/quick-start.html">Quick Start</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumbs">
+            <a href="index.html">Home</a> <span>›</span> Overview
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="index.html" class="active">Overview</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#requirements">Requirements</a></li>
+                </ul>
+
+                <h3>API Reference</h3>
+                <ul>
+                    <li><a href="api/trial-manager.html">TrialManager Class</a></li>
+                    <li><a href="api/methods.html">Methods</a></li>
+                    <li><a href="api/properties.html">Properties</a></li>
+                    <li><a href="api/calibration.html">Calibration API</a></li>
+                    <li><a href="api/gaze-tracking.html">Gaze Tracking API</a></li>
+                </ul>
+
+                <h3>Guides</h3>
+                <ul>
+                    <li><a href="api/quick-start.html">Quick Start</a></li>
+                    <li><a href="api/configuration.html">Configuration</a></li>
+                    <li><a href="api/best-practices.html">Best Practices</a></li>
+                </ul>
+            </aside>
+
+            <main class="main-content">
+                <h1>GazeTracking API Documentation</h1>
+
+                <div class="alert alert-info">
+                    <strong>Welcome!</strong> This documentation covers the comprehensive API for the GazeTracking experiment platform, including advanced eye tracking features with head movement compensation and adaptive sampling.
+                </div>
+
+                <h2 id="features">Key Features</h2>
+                <p>GazeTracking is a browser-based eye tracking experiment platform built on WebGazer.js and TensorFlow.js. It provides:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Description</th>
+                            <th>Benefit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Kalman Filtering</strong></td>
+                            <td>Real-time smoothing of gaze coordinates</td>
+                            <td>15-25% accuracy improvement, reduces jitter</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Head Pose Compensation</strong></td>
+                            <td>Tracks roll, pitch, yaw from facial landmarks</td>
+                            <td>Maintains accuracy during head movement</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Outlier Detection</strong></td>
+                            <td>Rejects invalid gaze points (>500px jumps)</td>
+                            <td>Eliminates tracking errors from dataset</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Adaptive Sampling</strong></td>
+                            <td>30-60fps based on movement speed</td>
+                            <td>Optimizes performance and data quality</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Calibration Validation</strong></td>
+                            <td>Automatic quality checks with refinement</td>
+                            <td>Ensures accuracy before experiments</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Periodic Recalibration</strong></td>
+                            <td>Quick 3-point recal every 10 trials</td>
+                            <td>Maintains accuracy during long sessions</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="architecture">Technical Architecture</h2>
+
+                <h3>Core Components</h3>
+                <p>The system is built with several key components:</p>
+
+                <ul>
+                    <li><strong>TrialManager</strong> - Main class orchestrating experiments, trials, and data collection</li>
+                    <li><strong>WebGazer.js</strong> - TensorFlow.js-based eye tracking engine with TFFacemesh tracker</li>
+                    <li><strong>Kalman Filter</strong> - Signal processing for smooth gaze trajectories</li>
+                    <li><strong>Head Pose Tracker</strong> - Facial landmark analysis for movement compensation</li>
+                    <li><strong>LocalForage</strong> - Client-side storage for experiment data</li>
+                </ul>
+
+                <h3>Data Flow Pipeline</h3>
+                <pre><code>Webcam Feed → TFFacemesh (468 landmarks)
+     ↓
+Facial Analysis → Eye Region Detection
+     ↓
+Raw Gaze Prediction (x, y coordinates)
+     ↓
+Outlier Detection (reject if >500px jump or off-screen)
+     ↓
+Head Pose Calculation (roll, pitch, yaw from landmarks 1, 33, 263)
+     ↓
+Kalman Filtering (q=0.01, r=0.1 for smoothing)
+     ↓
+Adaptive Sampling (60fps fast movement, 30fps slow)
+     ↓
+Processed Gaze Data (x, y, rawX, rawY, headPose, timestamp)
+     ↓
+LocalForage Storage + JSON Export</code></pre>
+
+                <h3>Calibration System</h3>
+                <p>The calibration system ensures accurate gaze predictions through:</p>
+
+                <ol>
+                    <li><strong>Initial Calibration</strong>: 9-10 points in predefined grid pattern</li>
+                    <li><strong>Quality Validation</strong>: Tests 5 points, measures average error</li>
+                    <li><strong>Automatic Refinement</strong>: Adds 3 points if quality <75%</li>
+                    <li><strong>Periodic Recalibration</strong>: 3-point quick recal every 10 trials</li>
+                </ol>
+
+                <div class="alert alert-warning">
+                    <strong>Note:</strong> Calibration quality directly impacts tracking accuracy. Ensure participants follow on-screen instructions carefully and maintain consistent posture.
+                </div>
+
+                <h2 id="requirements">System Requirements</h2>
+
+                <h3>Browser Support</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Browser</th>
+                            <th>Minimum Version</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Chrome</td>
+                            <td>90+</td>
+                            <td>Recommended - best TensorFlow.js performance</td>
+                        </tr>
+                        <tr>
+                            <td>Edge</td>
+                            <td>90+</td>
+                            <td>Full support (Chromium-based)</td>
+                        </tr>
+                        <tr>
+                            <td>Firefox</td>
+                            <td>88+</td>
+                            <td>Supported - slightly slower</td>
+                        </tr>
+                        <tr>
+                            <td>Safari</td>
+                            <td>14+</td>
+                            <td>Limited - may have performance issues</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Hardware Requirements</h3>
+                <ul>
+                    <li><strong>Camera:</strong> Webcam with 720p resolution (minimum)</li>
+                    <li><strong>Processor:</strong> Quad-core CPU (Intel i5/AMD Ryzen 5 or better)</li>
+                    <li><strong>RAM:</strong> 8GB minimum (16GB recommended)</li>
+                    <li><strong>Display:</strong> 1920x1080 minimum resolution</li>
+                </ul>
+
+                <h3>Software Dependencies</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Library</th>
+                            <th>Version</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WebGazer.js</td>
+                            <td>3.0+</td>
+                            <td>Eye tracking engine</td>
+                        </tr>
+                        <tr>
+                            <td>TensorFlow.js</td>
+                            <td>4.0+</td>
+                            <td>Machine learning backend</td>
+                        </tr>
+                        <tr>
+                            <td>LocalForage</td>
+                            <td>1.10+</td>
+                            <td>Client-side data storage</td>
+                        </tr>
+                        <tr>
+                            <td>Node.js http-server</td>
+                            <td>14.0+</td>
+                            <td>HTTPS development server</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Getting Started</h2>
+                <p>Ready to start using GazeTracking? Check out our <a href="api/quick-start.html">Quick Start Guide</a> for step-by-step instructions on setting up your first experiment.</p>
+
+                <div class="alert alert-success">
+                    <strong>Pro Tip:</strong> Start with the <a href="api/trial-manager.html">TrialManager</a> class documentation to understand the core API, then explore specific methods for your use case.
+                </div>
+
+                <h2>Code Example</h2>
+                <p>Here's a simple example of initializing an experiment:</p>
+
+                <pre><code><span class="keyword">import</span> { initializeExperiment } <span class="keyword">from</span> <span class="string">'./trialManager.js'</span>;
+
+<span class="comment">// Initialize the experiment when page loads</span>
+document.addEventListener(<span class="string">'DOMContentLoaded'</span>, () => {
+    initializeExperiment();
+    console.log(<span class="string">'Experiment initialized - press any key to start'</span>);
+});
+
+<span class="comment">// The system will:
+// 1. Prompt for participant initials
+// 2. Load test images based on selected type
+// 3. Initialize WebGazer with enhanced features
+// 4. Run calibration with validation
+// 5. Start experiment trials
+// 6. Export data to JSON</span></code></pre>
+
+                <h2>API Documentation Sections</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
+                        <h3 style="margin-top: 0;">TrialManager</h3>
+                        <p>Core class for managing experiments and trials</p>
+                        <a href="api/trial-manager.html">View Documentation →</a>
+                    </div>
+                    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
+                        <h3 style="margin-top: 0;">Methods Reference</h3>
+                        <p>Complete list of all available methods</p>
+                        <a href="api/methods.html">View Documentation →</a>
+                    </div>
+                    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
+                        <h3 style="margin-top: 0;">Properties</h3>
+                        <p>Instance variables and their purposes</p>
+                        <a href="api/properties.html">View Documentation →</a>
+                    </div>
+                    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
+                        <h3 style="margin-top: 0;">Quick Start</h3>
+                        <p>Get up and running in minutes</p>
+                        <a href="api/quick-start.html">View Documentation →</a>
+                    </div>
+                </div>
+
+                <h2>License</h2>
+                <p>Copyright 2026 Michael Ryan Hunsaker, M.Ed., Ph.D. Licensed under the Apache License, Version 2.0.</p>
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Ryan Hunsaker, M.Ed., Ph.D. All Rights Reserved.</p>
+            <p>Licensed under the Apache License, Version 2.0</p>
+            <p>Generated: January 26, 2026 | <a href="https://github.com/mrhunsaker/GazeTracking">GitHub Repository</a></p>
+        </div>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop">↑</div>
+
+    <script>
+        // Scroll to top button
+        const scrollTop = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

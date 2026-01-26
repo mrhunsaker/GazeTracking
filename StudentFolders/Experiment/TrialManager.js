@@ -24,6 +24,23 @@ export default class TrialManager {
         this.isPractice = false;
         this.objectImages = { targets: [], foils: [] };
         this._lastMousePos = { x: null, y: null };
+        
+        // Kalman filter states for smoothing
+        this.kalmanX = null;
+        this.kalmanY = null;
+        
+        // Head pose tracking
+        this.baselineHeadPose = null;
+        
+        // Recent gaze points for outlier detection
+        this.recentGazePoints = [];
+        this.maxRecentPoints = 5;
+        
+        // Adaptive sampling
+        this.lastSampleTime = 0;
+        
+        // Initialize Kalman filters
+        this.initKalmanFilter();
     }
 
     // Deterministic PRNG seeded by participantId
@@ -33,6 +50,176 @@ export default class TrialManager {
             let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
             t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
             return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
+
+    /**
+     * Initializes the Kalman filter states for X and Y coordinates.
+     */
+    initKalmanFilter() {
+        this.kalmanX = {
+            q: 0.01,  // Process noise
+            r: 0.1,   // Measurement noise
+            p: 1,     // Estimation error
+            x: 0,     // Estimated value
+            k: 0      // Kalman gain
+        };
+        this.kalmanY = {...this.kalmanX};
+    }
+
+    /**
+     * Applies Kalman filter to a measurement.
+     */
+    kalmanFilter(measurement, kalmanState) {
+        kalmanState.p = kalmanState.p + kalmanState.q;
+        kalmanState.k = kalmanState.p / (kalmanState.p + kalmanState.r);
+        kalmanState.x = kalmanState.x + kalmanState.k * (measurement - kalmanState.x);
+        kalmanState.p = (1 - kalmanState.k) * kalmanState.p;
+        return kalmanState.x;
+    }
+
+    /**
+     * Compensates for head movement and applies Kalman filtering.
+     */
+    compensateForHeadMovement(gazePoint, headPoseData) {
+        const smoothX = this.kalmanFilter(gazePoint.x, this.kalmanX);
+        const smoothY = this.kalmanFilter(gazePoint.y, this.kalmanY);
+        return {x: smoothX, y: smoothY};
+    }
+
+    /**
+     * Checks if a gaze point is an outlier based on position and velocity.
+     */
+    isOutlier(gazePoint) {
+        if (gazePoint.x < -100 || gazePoint.x > window.innerWidth + 100 ||
+            gazePoint.y < -100 || gazePoint.y > window.innerHeight + 100) {
+            return true;
+        }
+        
+        if (this.recentGazePoints.length > 0) {
+            const lastPoint = this.recentGazePoints[this.recentGazePoints.length - 1];
+            const distance = Math.sqrt(
+                Math.pow(gazePoint.x - lastPoint.x, 2) + 
+                Math.pow(gazePoint.y - lastPoint.y, 2)
+            );
+            if (distance > 500) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Calculates head pose from facial landmarks.
+     */
+    calculateHeadPose(faceMesh) {
+        if (!faceMesh || faceMesh.length < 468) return null;
+        
+        const currentPose = this.extractHeadPoseFeatures(faceMesh);
+        
+        if (!this.baselineHeadPose) {
+            this.baselineHeadPose = currentPose;
+        }
+        
+        return {
+            roll: currentPose.roll - this.baselineHeadPose.roll,
+            pitch: currentPose.pitch - this.baselineHeadPose.pitch,
+            yaw: currentPose.yaw - this.baselineHeadPose.yaw,
+            distance: this.calculateFaceDistance(faceMesh)
+        };
+    }
+
+    /**
+     * Extracts head pose features from facial landmarks.
+     */
+    extractHeadPoseFeatures(faceMesh) {
+        const nose = faceMesh[1] || [0, 0, 0];
+        const leftEye = faceMesh[33] || [0, 0, 0];
+        const rightEye = faceMesh[263] || [0, 0, 0];
+        
+        const roll = Math.atan2(rightEye[1] - leftEye[1], rightEye[0] - leftEye[0]);
+        const pitch = Math.atan2(nose[1] - (leftEye[1] + rightEye[1]) / 2, nose[2] || 1);
+        const eyeDistance = Math.abs(rightEye[0] - leftEye[0]);
+        const yaw = eyeDistance > 0 ? (rightEye[0] - leftEye[0]) / Math.abs(nose[0] - (leftEye[0] + rightEye[0]) / 2) : 0;
+        
+        return {roll, pitch, yaw};
+    }
+
+    /**
+     * Calculates approximate face distance from camera.
+     */
+    calculateFaceDistance(faceMesh) {
+        if (!faceMesh || faceMesh.length < 468) return 0;
+        
+        const leftEye = faceMesh[33] || [0, 0, 0];
+        const rightEye = faceMesh[263] || [0, 0, 0];
+        
+        return Math.sqrt(
+            Math.pow(rightEye[0] - leftEye[0], 2) +
+            Math.pow(rightEye[1] - leftEye[1], 2)
+        );
+    }
+
+    /**
+     * Determines if a gaze sample should be processed based on adaptive sampling rate.
+     */
+    shouldProcessSample(data) {
+        const now = Date.now();
+        const timeSinceLastSample = now - this.lastSampleTime;
+        
+        let movementSpeed = 0;
+        if (this.recentGazePoints.length > 0) {
+            const lastPoint = this.recentGazePoints[this.recentGazePoints.length - 1];
+            const distance = Math.sqrt(
+                Math.pow(data.x - lastPoint.x, 2) + 
+                Math.pow(data.y - lastPoint.y, 2)
+            );
+            const timeElapsed = (now - lastPoint.time) / 1000;
+            movementSpeed = timeElapsed > 0 ? distance / timeElapsed : 0;
+        }
+        
+        const dynamicInterval = movementSpeed > 100 ? 16 : 33;
+        
+        if (timeSinceLastSample >= dynamicInterval) {
+            this.lastSampleTime = now;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Processes gaze data with filtering and compensation.
+     */
+    processGazeData(gazePoint, timestamp) {
+        if (!gazePoint) return null;
+        
+        if (this.isOutlier(gazePoint)) {
+            console.log('Outlier rejected:', gazePoint);
+            return null;
+        }
+        
+        let headPoseData = null;
+        try {
+            const faceMesh = webgazer.getTracker().getPrediction();
+            if (faceMesh && faceMesh.length > 0) {
+                headPoseData = this.calculateHeadPose(faceMesh);
+            }
+        } catch (err) {
+            // Face mesh not available
+        }
+        
+        const compensatedGaze = this.compensateForHeadMovement(gazePoint, headPoseData);
+        
+        this.recentGazePoints.push({x: compensatedGaze.x, y: compensatedGaze.y, time: Date.now()});
+        if (this.recentGazePoints.length > this.maxRecentPoints) {
+            this.recentGazePoints.shift();
+        }
+        
+        return {
+            x: compensatedGaze.x,
+            y: compensatedGaze.y,
+            rawX: gazePoint.x,
+            rawY: gazePoint.y,
+            headPose: headPoseData,
+            timestamp: timestamp || Date.now()
         };
     }
 
@@ -197,18 +384,27 @@ export default class TrialManager {
                 return;
             }
 
-            // Configure WebGazer for better accuracy
+            // Configure WebGazer with improved settings for head movement resistance
             webgazer
-                .setRegression('weightedRidge') // Better than default ridge
+                .setRegression('ridge')  // More stable than weightedRidge for head movement
                 .setTracker('TFFacemesh') // More accurate face tracking
                 .setGazeListener((data, clock) => {
-                    // Store for validation
-                    this._lastGazePoint = data;
+                    // Apply adaptive sampling and processing
+                    if (data && this.shouldProcessSample(data)) {
+                        const processed = this.processGazeData(data, clock);
+                        if (processed) {
+                            this._lastGazePoint = processed;
+                        }
+                    }
                 })
                 .saveDataAcrossSessions(false) // Fresh calibration each time
                 .showVideo(true) // Show video feed for debugging
-                .showPredictionPoints(true) // Show where system thinks you're looking
-                .begin();
+                .showPredictionPoints(true); // Show where system thinks you're looking
+
+            // Increase training data storage for better model
+            webgazer.params.storingPoints = 200;
+
+            webgazer.begin();
 
             // Enable pause/resume to prevent continuous updates during trials
             webgazer.pause(); // Start paused, resume after calibration

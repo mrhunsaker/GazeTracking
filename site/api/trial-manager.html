@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrialManager Class - GazeTracking API</title>
+    <link rel="stylesheet" href="../css/maven-theme.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GazeTracking - Eye Tracking Experiment Platform</h1>
+            <div class="version">Version 2025.1.0 | Last Published: January 26, 2026</div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="../index.html">Overview</a></li>
+                <li><a href="trial-manager.html" class="active">TrialManager</a></li>
+                <li><a href="methods.html">Methods</a></li>
+                <li><a href="properties.html">Properties</a></li>
+                <li><a href="quick-start.html">Quick Start</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumbs">
+            <a href="../index.html">Home</a> <span>›</span> <a href="trial-manager.html">API Reference</a> <span>›</span> TrialManager Class
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <div class="search-box">
+                    <input type="text" placeholder="Search methods..." id="searchInput">
+                </div>
+
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#constructor">Constructor</a></li>
+                    <li><a href="#initialization">Initialization</a></li>
+                    <li><a href="#calibration">Calibration</a></li>
+                    <li><a href="#gaze-tracking">Gaze Tracking</a></li>
+                    <li><a href="#trial-management">Trial Management</a></li>
+                    <li><a href="#data-export">Data Export</a></li>
+                </ul>
+
+                <h3>Related</h3>
+                <ul>
+                    <li><a href="methods.html">All Methods</a></li>
+                    <li><a href="properties.html">All Properties</a></li>
+                    <li><a href="gaze-tracking.html">Gaze Tracking API</a></li>
+                    <li><a href="calibration.html">Calibration API</a></li>
+                </ul>
+            </aside>
+
+            <main class="main-content">
+                <h1>TrialManager Class</h1>
+                <span class="badge badge-public">PUBLIC</span>
+
+                <p class="method-description">
+                    The <code>TrialManager</code> class is the core component of the GazeTracking system. It orchestrates the entire experiment workflow, including participant initialization, WebGazer setup, calibration, trial execution, gaze data collection, and data export.
+                </p>
+
+                <div class="toc">
+                    <h3>Table of Contents</h3>
+                    <ul>
+                        <li><a href="#constructor">Constructor</a></li>
+                        <li><a href="#core-properties">Core Properties</a></li>
+                        <li><a href="#initialization">Initialization Methods</a></li>
+                        <li><a href="#calibration">Calibration System</a></li>
+                        <li><a href="#gaze-tracking">Gaze Tracking</a></li>
+                        <li><a href="#trial-management">Trial Management</a></li>
+                        <li><a href="#utility-methods">Utility Methods</a></li>
+                    </ul>
+                </div>
+
+                <h2 id="constructor">Constructor</h2>
+                <div class="method">
+                    <h3>TrialManager(participantId)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+
+                    <div class="method-signature">
+constructor(participantId = 0)
+                    </div>
+
+                    <div class="method-description">
+                        <p>Creates a new instance of TrialManager. Initializes all necessary properties including Kalman filters for gaze smoothing, head pose tracking variables, and experiment state management.</p>
+                    </div>
+
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">participantId</span> <span class="param-type">(number, optional)</span>
+                            <p>Unique identifier for the participant. Used for seeded randomization and data tracking. Default: 0</p>
+                        </div>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code><span class="keyword">const</span> manager = <span class="keyword">new</span> <span class="class-name">TrialManager</span>(<span class="number">12345</span>);
+<span class="comment">// Creates a new trial manager for participant 12345</span></code></pre>
+                </div>
+
+                <h2 id="core-properties">Core Properties</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>participantId</code></td>
+                            <td>number</td>
+                            <td>Unique identifier for the current participant</td>
+                        </tr>
+                        <tr>
+                            <td><code>trialData</code></td>
+                            <td>Array</td>
+                            <td>Collection of all trial results including timing, objects shown, and gaze data</td>
+                        </tr>
+                        <tr>
+                            <td><code>currentTrial</code></td>
+                            <td>number</td>
+                            <td>Index of the currently executing trial (0-based)</td>
+                        </tr>
+                        <tr>
+                            <td><code>trialCount</code></td>
+                            <td>number</td>
+                            <td>Total number of trials to execute (user-specified: 10-50)</td>
+                        </tr>
+                        <tr>
+                            <td><code>calibrationComplete</code></td>
+                            <td>boolean</td>
+                            <td>Flag indicating whether initial calibration has been successfully completed</td>
+                        </tr>
+                        <tr>
+                            <td><code>allGazeData</code></td>
+                            <td>Array</td>
+                            <td>Complete collection of all gaze points across entire session</td>
+                        </tr>
+                        <tr>
+                            <td><code>testType</code></td>
+                            <td>string</td>
+                            <td>Type of stimulus ('Shapes', 'Colors', 'Abstract', 'Pictures')</td>
+                        </tr>
+                        <tr>
+                            <td><code>userInitials</code></td>
+                            <td>string</td>
+                            <td>Participant initials (max 6 characters) for file naming</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="initialization">Initialization Methods</h2>
+
+                <div class="method">
+                    <h3>initializeExperiment()</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+
+                    <div class="method-signature">
+export function initializeExperiment(): void
+                    </div>
+
+                    <div class="method-description">
+                        <p>Top-level initialization function that sets up the entire experiment. Attaches a keydown event listener to start the experiment when any key is pressed. Orchestrates the sequential setup: participant dialog → image loading → WebGazer initialization → calibration.</p>
+                    </div>
+
+                    <h4>Workflow</h4>
+                    <ol>
+                        <li>Listen for keydown event (user trigger)</li>
+                        <li>Show participant initials dialog</li>
+                        <li>Parallel: Load images + Initialize WebGazer</li>
+                        <li>Start calibration phase</li>
+                        <li>Begin experiment trials</li>
+                    </ol>
+
+                    <h4>Example</h4>
+                    <pre><code><span class="keyword">import</span> { initializeExperiment } <span class="keyword">from</span> <span class="string">'./trialManager.js'</span>;
+
+document.addEventListener(<span class="string">'DOMContentLoaded'</span>, () => {
+    initializeExperiment();
+    console.log(<span class="string">'Ready - press any key to start'</span>);
+});</code></pre>
+                </div>
+
+                <div class="method">
+                    <h3>showInitialsDialog()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+
+                    <div class="method-signature">
+async showInitialsDialog(): Promise&lt;void&gt;
+                    </div>
+
+                    <div class="method-description">
+                        <p>Displays a modal dialog for collecting participant information: initials (max 6 chars), test type (Shapes/Colors/Abstract/Pictures), and trial count (10-50). Validates input before proceeding.</p>
+                    </div>
+
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;void&gt;</strong> - Resolves when dialog is submitted with valid inputs</p>
+                    </div>
+
+                    <h4>Side Effects</h4>
+                    <ul>
+                        <li>Sets <code>this.userInitials</code></li>
+                        <li>Sets <code>this.testType</code></li>
+                        <li>Sets <code>this.trialCount</code></li>
+                        <li>Calls <code>initializeExclusions()</code></li>
+                        <li>Calls <code>setupImages()</code></li>
+                    </ul>
+                </div>
+
+                <div class="method">
+                    <h3>initWebGazer()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+
+                    <div class="method-signature">
+async initWebGazer(): Promise&lt;void&gt;
+                    </div>
+
+                    <div class="method-description">
+                        <p>Initializes the WebGazer library with enhanced configuration for improved accuracy and head movement resistance. Configures TFFacemesh tracker, ridge regression, adaptive sampling, and gaze listener.</p>
+                    </div>
+
+                    <h4>Configuration Applied</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Setting</th>
+                                <th>Value</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Regression Model</td>
+                                <td><code>ridge</code></td>
+                                <td>More stable than weightedRidge for head movement</td>
+                            </tr>
+                            <tr>
+                                <td>Tracker</td>
+                                <td><code>TFFacemesh</code></td>
+                                <td>468-point facial landmark tracking</td>
+                            </tr>
+                            <tr>
+                                <td>Storing Points</td>
+                                <td>200</td>
+                                <td>Increased from default 150 for better model</td>
+                            </tr>
+                            <tr>
+                                <td>Gaze Listener</td>
+                                <td>Custom with adaptive sampling</td>
+                                <td>30-60fps based on movement speed</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Example</h4>
+                    <pre><code><span class="keyword">await</span> trialManager.initWebGazer();
+console.log(<span class="string">'WebGazer initialized with enhanced features'</span>);</code></pre>
+                </div>
+
+                <h2 id="calibration">Calibration System</h2>
+
+                <div class="method">
+                    <h3>startCalibrationPhase()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+
+                    <div class="method-signature">
+async startCalibrationPhase(): Promise&lt;void&gt;
+                    </div>
+
+                    <div class="method-description">
+                        <p>Executes the calibration sequence with automatic quality validation and refinement. Displays 9 calibration points in a grid pattern, validates accuracy, and adds refinement points if needed.</p>
+                    </div>
+
+                    <h4>Calibration Points</h4>
+                    <pre><code><span class="comment">// 9-point grid pattern (percentage-based positioning)</span>
+[
+  { x: <span class="number">0.1</span>, y: <span class="number">0.1</span> },  <span class="comment">// Top-left</span>
+  { x: <span class="number">0.5</span>, y: <span class="number">0.1</span> },  <span class="comment">// Top-center</span>
+  { x: <span class="number">0.9</span>, y: <span class="number">0.1</span> },  <span class="comment">// Top-right</span>
+  { x: <span class="number">0.9</span>, y: <span class="number">0.5</span> },  <span class="comment">// Middle-right</span>
+  { x: <span class="number">0.5</span>, y: <span class="number">0.5</span> },  <span class="comment">// Center</span>
+  { x: <span class="number">0.1</span>, y: <span class="number">0.5</span> },  <span class="comment">// Middle-left</span>
+  { x: <span class="number">0.1</span>, y: <span class="number">0.9</span> },  <span class="comment">// Bottom-left</span>
+  { x: <span class="number">0.5</span>, y: <span class="number">0.9</span> },  <span class="comment">// Bottom-center</span>
+  { x: <span class="number">0.9</span>, y: <span class="number">0.9</span> }   <span class="comment">// Bottom-right</span>
+]</code></pre>
+
+                    <h4>Validation Process</h4>
+                    <ol>
+                        <li>Complete 9-point calibration</li>
+                        <li>Test predictions at 5 validation points</li>
+                        <li>Calculate quality score (0-1)</li>
+                        <li>If quality < 0.75: add 3 refinement points</li>
+                        <li>Mark calibration complete</li>
+                    </ol>
+                </div>
+
+                <div class="method">
+                    <h3>validateCalibration()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+
+                    <div class="method-signature">
+async validateCalibration(): Promise&lt;number&gt;
+                    </div>
+
+                    <div class="method-description">
+                        <p>Tests calibration quality by measuring prediction error at 5 known points. Returns a normalized quality score between 0 (poor) and 1 (excellent).</p>
+                    </div>
+
+                    <div class="return-info">
+                        <h4>Returns</h4>
+                        <p><strong>Promise&lt;number&gt;</strong> - Quality score: 1 - (avgError / 200), where avgError is mean pixel distance from target points</p>
+                    </div>
+
+                    <h4>Quality Threshold</h4>
+                    <div class="alert alert-info">
+                        A score ≥ 0.75 indicates acceptable calibration quality. Lower scores trigger automatic refinement with additional calibration points.
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>quickRecalibration()</h3>
+                    <span class="badge badge-async">ASYNC</span>
+
+                    <div class="method-signature">
+async quickRecalibration(): Promise&lt;void&gt;
+                    </div>
+
+                    <div class="method-description">
+                        <p>Performs a fast 3-point recalibration during experiments to maintain accuracy. Called automatically every 10 trials. Uses center and corner points for quick adjustment.</p>
+                    </div>
+
+                    <h4>Recalibration Points</h4>
+                    <pre><code><span class="comment">// 3-point quick recalibration</span>
+[
+  { x: <span class="number">0.5</span>, y: <span class="number">0.5</span> },  <span class="comment">// Center</span>
+  { x: <span class="number">0.1</span>, y: <span class="number">0.1</span> },  <span class="comment">// Top-left</span>
+  { x: <span class="number">0.9</span>, y: <span class="number">0.9</span> }   <span class="comment">// Bottom-right</span>
+]</code></pre>
+                </div>
+
+                <h2 id="gaze-tracking">Gaze Tracking Methods</h2>
+
+                <div class="method">
+                    <h3>processGazeData(gazePoint, trialStartTime)</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+
+                    <div class="method-signature">
+processGazeData(gazePoint: Object, trialStartTime: number): void
+                    </div>
+
+                    <div class="method-description">
+                        <p>Core gaze processing pipeline. Applies outlier detection, head pose compensation, Kalman filtering, and stores enhanced gaze data with metadata. This is the heart of the eye tracking system.</p>
+                    </div>
+
+                    <div class="param-list">
+                        <h4>Parameters</h4>
+                        <div class="param-item">
+                            <span class="param-name">gazePoint</span> <span class="param-type">(Object)</span>
+                            <p>Raw gaze coordinates from WebGazer: <code>{x: number, y: number}</code></p>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">trialStartTime</span> <span class="param-type">(number)</span>
+                            <p>Timestamp when current trial started (milliseconds since epoch)</p>
+                        </div>
+                    </div>
+
+                    <h4>Processing Pipeline</h4>
+                    <ol>
+                        <li><strong>Outlier Detection:</strong> Reject if >500px jump or off-screen (+100px buffer)</li>
+                        <li><strong>Head Pose Extraction:</strong> Get roll, pitch, yaw from facial landmarks</li>
+                        <li><strong>Kalman Filtering:</strong> Apply smoothing with q=0.01, r=0.1</li>
+                        <li><strong>Data Enrichment:</strong> Add metadata (timestamps, phase, head pose)</li>
+                        <li><strong>Buffer Management:</strong> Update recent points (max 5) for outlier detection</li>
+                        <li><strong>Storage:</strong> Add to current trial and all-gaze-data arrays</li>
+                    </ol>
+
+                    <h4>Output Format</h4>
+                    <pre><code>{
+  x: <span class="number">512.3</span>,              <span class="comment">// Filtered gaze X (pixels)</span>
+  y: <span class="number">384.7</span>,              <span class="comment">// Filtered gaze Y (pixels)</span>
+  rawX: <span class="number">515.1</span>,           <span class="comment">// Raw gaze X (pixels)</span>
+  rawY: <span class="number">388.2</span>,           <span class="comment">// Raw gaze Y (pixels)</span>
+  headPose: {
+    roll: <span class="number">0.05</span>,          <span class="comment">// Roll angle (radians, relative to baseline)</span>
+    pitch: <span class="number">-0.02</span>,        <span class="comment">// Pitch angle (radians)</span>
+    yaw: <span class="number">0.08</span>,           <span class="comment">// Yaw angle (radians)</span>
+    distance: <span class="number">125.4</span>      <span class="comment">// Face distance metric</span>
+  },
+  time: <span class="number">1706284847123</span>,   <span class="comment">// Absolute timestamp (ms)</span>
+  relativeTime: <span class="number">2543</span>,    <span class="comment">// Time since trial start (ms)</span>
+  phase: <span class="string">'experiment'</span>    <span class="comment">// 'calibration' or 'experiment'</span>
+}</code></pre>
+                </div>
+
+                <div class="method">
+                    <h3>initKalmanFilter()</h3>
+                    <span class="badge badge-public">PUBLIC</span>
+
+                    <div class="method-signature">
+initKalmanFilter(): void
+                    </div>
+
+                    <div class="method-description">
+                        <p>Initializes Kalman filter states for X and Y coordinates. Sets process noise (q), measurement noise (r), estimation error (p), estimated value (x), and Kalman gain (k).</p>
+                    </div>
+
+                    <h4>Filter Parameters</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>q (process noise)</td>
+                                <td>0.01</td>
+                                <td>Model uncertainty - lower = trust model more</td>
+                            </tr>
+                            <tr>
+                                <td>r (measurement noise)</td>
+                                <td>0.1</td>
+                                <td>Sensor uncertainty - lower = trust measurements more</td>
+                            </tr>
+                            <tr>
+                                <td>p (estimation error)</td>
+                                <td>1</td>
+                                <td>Initial uncertainty estimate</td>
+                            </tr>
+                            <tr>
+                                <td>x (estimated value)</td>
+                                <td>0</td>
+                                <td>Initial filtered coordinate</td>
+                            </tr>
+                            <tr>
+                                <td>k (Kalman gain)</td>
+                                <td>0</td>
+                                <td>Computed gain for optimal filtering</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-info">
+                        <strong>Tuning Tip:</strong> These parameters were optimized through empirical testing. Lower q/r ratios provide more smoothing but increase lag. Current values balance accuracy and responsiveness.
+                    </div>
+                </div>
+
+                <h3>See Also</h3>
+                <ul>
+                    <li><a href="methods.html">Complete Methods Reference</a></li>
+                    <li><a href="properties.html">All Properties</a></li>
+                    <li><a href="gaze-tracking.html">Gaze Tracking Deep Dive</a></li>
+                    <li><a href="calibration.html">Calibration Best Practices</a></li>
+                </ul>
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Ryan Hunsaker, M.Ed., Ph.D. All Rights Reserved.</p>
+            <p>Licensed under the Apache License, Version 2.0</p>
+            <p>Generated: January 26, 2026 | <a href="https://github.com/mrhunsaker/GazeTracking">GitHub Repository</a></p>
+        </div>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop">↑</div>
+
+    <script>
+        // Scroll to top
+        const scrollTop = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollTop.classList.toggle('visible', window.pageYOffset > 300);
+        });
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Simple search filter
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const methods = document.querySelectorAll('.method');
+            methods.forEach(method => {
+                const text = method.textContent.toLowerCase();
+                method.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

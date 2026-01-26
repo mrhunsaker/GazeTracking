@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start Guide - GazeTracking API</title>
+    <link rel="stylesheet" href="../css/maven-theme.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GazeTracking - Eye Tracking Experiment Platform</h1>
+            <div class="version">Version 2025.1.0 | Last Published: January 26, 2026</div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="../index.html">Overview</a></li>
+                <li><a href="trial-manager.html">TrialManager</a></li>
+                <li><a href="methods.html">Methods</a></li>
+                <li><a href="properties.html">Properties</a></li>
+                <li><a href="quick-start.html" class="active">Quick Start</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumbs">
+            <a href="../index.html">Home</a> <span>›</span> <a href="quick-start.html">Guides</a> <span>›</span> Quick Start
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#prerequisites">Prerequisites</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#ssl-setup">SSL Setup</a></li>
+                    <li><a href="#first-experiment">First Experiment</a></li>
+                    <li><a href="#data-export">Data Export</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                </ul>
+            </aside>
+
+            <main class="main-content">
+                <h1>Quick Start Guide</h1>
+
+                <p>Get your first gaze tracking experiment running in under 10 minutes. This guide walks through setup, configuration, and execution of a basic experiment.</p>
+
+                <h2 id="prerequisites">Prerequisites</h2>
+
+                <h3>Required Software</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Version</th>
+                            <th>Installation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Node.js</td>
+                            <td>14.0+</td>
+                            <td><code>https://nodejs.org/</code></td>
+                        </tr>
+                        <tr>
+                            <td>http-server</td>
+                            <td>Latest</td>
+                            <td><code>npm install -g http-server</code></td>
+                        </tr>
+                        <tr>
+                            <td>OpenSSL</td>
+                            <td>Any</td>
+                            <td>Included with Git Bash/Linux/macOS</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Hardware Requirements</h3>
+                <ul>
+                    <li>Webcam with 720p minimum resolution</li>
+                    <li>Quad-core CPU (Intel i5/AMD Ryzen 5 or better)</li>
+                    <li>8GB RAM minimum (16GB recommended)</li>
+                    <li>1920x1080 display minimum</li>
+                </ul>
+
+                <h2 id="installation">Installation Steps</h2>
+
+                <h3>Step 1: Clone Repository</h3>
+                <pre><code>git clone https://github.com/mrhunsaker/GazeTracking.git
+cd GazeTracking</code></pre>
+
+                <h3>Step 2: Install http-server</h3>
+                <pre><code>npm install -g http-server</code></pre>
+
+                <div class="alert alert-info">
+                    <strong>Note:</strong> On macOS/Linux, you may need to use <code>sudo npm install -g http-server</code>
+                </div>
+
+                <h2 id="ssl-setup">SSL Certificate Setup</h2>
+
+                <p>Modern browsers require HTTPS to access webcams. Generate self-signed SSL certificates:</p>
+
+                <h3>Generate Certificates</h3>
+                <pre><code>openssl req -nodes -new -x509 -keyout server.key -out server.cert</code></pre>
+
+                <h4>Certificate Generation Prompts</h4>
+                <p>You can press Enter to skip all prompts, or fill them in as follows:</p>
+                <pre><code>Country Name: US
+State: [Your State]
+Locality: [Your City]
+Organization: Research Lab
+Common Name: localhost
+Email: your@email.com</code></pre>
+
+                <div class="alert alert-warning">
+                    <strong>Browser Warning:</strong> Your browser will show a security warning for self-signed certificates. This is expected - click "Advanced" and "Proceed to localhost" to continue.
+                </div>
+
+                <h2 id="first-experiment">Running Your First Experiment</h2>
+
+                <h3>Step 1: Start the Server</h3>
+
+                <p>Navigate to the experiment folder and start the HTTPS server:</p>
+
+                <pre><code>cd StudentFolders/2025_Students
+http-server -S -C server.cert -K server.key -p 8080</code></pre>
+
+                <p>You should see:</p>
+                <pre><code>Starting up http-server, serving ./ through https
+Available on:
+  https://127.0.0.1:8080
+  https://192.168.1.100:8080
+Hit CTRL-C to stop the server</code></pre>
+
+                <h3>Step 2: Open in Browser</h3>
+
+                <ol>
+                    <li>Open Chrome or Edge (recommended)</li>
+                    <li>Navigate to <code>https://localhost:8080</code></li>
+                    <li>Click "Advanced" → "Proceed to localhost" (for self-signed cert)</li>
+                    <li>Allow camera permissions when prompted</li>
+                </ol>
+
+                <h3>Step 3: Initialize Experiment</h3>
+
+                <ol>
+                    <li><strong>Press any key</strong> to start initialization</li>
+                    <li>Enter participant initials (max 6 characters)</li>
+                    <li>Select test type:
+                        <ul>
+                            <li><strong>Shapes:</strong> 193 geometric shapes</li>
+                            <li><strong>Colors:</strong> 10 colored objects</li>
+                            <li><strong>Abstract:</strong> 403 abstract patterns</li>
+                        </ul>
+                    </li>
+                    <li>Select trial count (10-50)</li>
+                    <li>Click "Start"</li>
+                </ol>
+
+                <h3>Step 4: Calibration</h3>
+
+                <p>The calibration sequence will begin automatically:</p>
+
+                <ol>
+                    <li><strong>9-Point Calibration:</strong> Click each yellow dot that appears
+                        <ul>
+                            <li>Look directly at each dot before clicking</li>
+                            <li>Keep your head still</li>
+                            <li>Maintain consistent posture</li>
+                        </ul>
+                    </li>
+                    <li><strong>Quality Validation:</strong> System automatically tests accuracy</li>
+                    <li><strong>Refinement (if needed):</strong> 3 additional points if quality < 75%</li>
+                </ol>
+
+                <div class="alert alert-success">
+                    <strong>Calibration Tips:</strong>
+                    <ul>
+                        <li>Sit 50-70cm from screen</li>
+                        <li>Ensure good lighting on your face</li>
+                        <li>Remove glasses if possible (reduces reflections)</li>
+                        <li>Look at the center of each dot, not the edges</li>
+                    </ul>
+                </div>
+
+                <h3>Step 5: Run Experiment</h3>
+
+                <p>After calibration, trials begin automatically:</p>
+
+                <ol>
+                    <li><strong>Sample Phase:</strong> One object shown for 3 seconds</li>
+                    <li><strong>Delay:</strong> 2-second black screen</li>
+                    <li><strong>Test Phase:</strong> Three objects shown for 10 seconds
+                        <ul>
+                            <li>Type 1 trials: target + 2 identical foils</li>
+                            <li>Type 2 trials: target + 2 different foils</li>
+                        </ul>
+                    </li>
+                    <li><strong>Repeat:</strong> Continues for selected trial count</li>
+                    <li><strong>Periodic Recalibration:</strong> 3-point recal every 10 trials</li>
+                </ol>
+
+                <h2 id="data-export">Data Export</h2>
+
+                <p>When the experiment completes, data is automatically:</p>
+
+                <ol>
+                    <li><strong>Saved to browser storage</strong> (IndexedDB via LocalForage)</li>
+                    <li><strong>Downloaded as JSON file</strong> to your Downloads folder</li>
+                </ol>
+
+                <h3>Data File Format</h3>
+                <pre><code>{
+  "trialData": [
+    {
+      "trialNumber": 1,
+      "type": 1,
+      "startTime": 1706284843120,
+      "endTime": 1706284858125,
+      "object1": 45,
+      "testObjects": [45, 127, 127],
+      "positions": [
+        {"position": "left", "objectNum": 45, "isTarget": true},
+        {"position": "center", "objectNum": 127, "isTarget": false},
+        {"position": "right", "objectNum": 127, "isTarget": false}
+      ],
+      "gazeData": [/* array of gaze points */]
+    }
+    // ... more trials
+  ],
+  "gazeData": [/* all gaze points across session */],
+  "timestamp": 1706284860000,
+  "totalTrials": 20
+}</code></pre>
+
+                <h3>Gaze Data Format</h3>
+                <pre><code>{
+  "x": 512.3,              // Filtered gaze X (pixels)
+  "y": 384.7,              // Filtered gaze Y (pixels)
+  "rawX": 515.1,           // Raw gaze X before filtering
+  "rawY": 388.2,           // Raw gaze Y before filtering
+  "headPose": {
+    "roll": 0.05,          // Head roll angle (radians)
+    "pitch": -0.02,        // Head pitch angle (radians)
+    "yaw": 0.08,           // Head yaw angle (radians)
+    "distance": 125.4      // Face distance metric
+  },
+  "time": 1706284847123,   // Absolute timestamp
+  "relativeTime": 2543,    // Milliseconds since trial start
+  "phase": "experiment"    // 'calibration' or 'experiment'
+}</code></pre>
+
+                <h2 id="troubleshooting">Common Issues & Solutions</h2>
+
+                <div class="method">
+                    <h3>Camera Not Detected</h3>
+                    <div class="method-description">
+                        <p><strong>Symptom:</strong> Browser doesn't prompt for camera permission or WebGazer fails to initialize.</p>
+                        
+                        <h4>Solutions:</h4>
+                        <ol>
+                            <li><strong>Check HTTPS:</strong> Webcam access requires SSL
+                                <pre><code># Verify URL starts with https://
+https://localhost:8080  ✓
+http://localhost:8080   ✗</code></pre>
+                            </li>
+                            <li><strong>Camera Permissions:</strong> Check browser settings
+                                <ul>
+                                    <li>Chrome: Settings → Privacy → Site Settings → Camera</li>
+                                    <li>Edge: Settings → Cookies and site permissions → Camera</li>
+                                </ul>
+                            </li>
+                            <li><strong>Camera in Use:</strong> Close other apps using webcam (Zoom, Skype, etc.)</li>
+                            <li><strong>Try Different Browser:</strong> Chrome recommended, Firefox supported</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>Poor Calibration Quality</h3>
+                    <div class="method-description">
+                        <p><strong>Symptom:</strong> Repeated refinement prompts or inaccurate gaze tracking.</p>
+                        
+                        <h4>Solutions:</h4>
+                        <ol>
+                            <li><strong>Lighting:</strong> Ensure face is well-lit
+                                <ul>
+                                    <li>Avoid backlighting (window behind you)</li>
+                                    <li>Use front/side lighting</li>
+                                    <li>Avoid harsh shadows on face</li>
+                                </ul>
+                            </li>
+                            <li><strong>Distance:</strong> Sit 50-70cm from screen</li>
+                            <li><strong>Head Position:</strong> Keep head still during calibration</li>
+                            <li><strong>Glasses:</strong> Remove if possible (reflections interfere)</li>
+                            <li><strong>Camera Angle:</strong> Webcam should be at eye level</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>SSL Certificate Error</h3>
+                    <div class="method-description">
+                        <p><strong>Symptom:</strong> Browser shows "Your connection is not private" warning.</p>
+                        
+                        <h4>Solution:</h4>
+                        <p>This is expected for self-signed certificates in local development:</p>
+                        <ol>
+                            <li>Click "Advanced" button</li>
+                            <li>Click "Proceed to localhost (unsafe)"</li>
+                            <li>Allow camera permissions</li>
+                        </ol>
+                        
+                        <div class="alert alert-info">
+                            <strong>Security Note:</strong> This warning is safe to bypass for localhost during development. For production deployments, use properly signed certificates from a Certificate Authority.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>Slow Performance / Lag</h3>
+                    <div class="method-description">
+                        <p><strong>Symptom:</strong> Choppy video preview or delayed gaze predictions.</p>
+                        
+                        <h4>Solutions:</h4>
+                        <ol>
+                            <li><strong>Close Other Apps:</strong> Free up CPU/RAM</li>
+                            <li><strong>Lower Video Preview Size:</strong> Edit in trialManager.js:
+                                <pre><code>webgazer.showVideoPreview(false); // Disable preview</code></pre>
+                            </li>
+                            <li><strong>Use Chrome:</strong> Best TensorFlow.js performance</li>
+                            <li><strong>Check System Requirements:</strong> Ensure quad-core CPU, 8GB+ RAM</li>
+                            <li><strong>GPU Acceleration:</strong> Enable in browser settings
+                                <ul>
+                                    <li>Chrome: Settings → System → "Use hardware acceleration when available"</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <h3>Images Not Loading</h3>
+                    <div class="method-description">
+                        <p><strong>Symptom:</strong> "Error loading images" or blank trial screens.</p>
+                        
+                        <h4>Solutions:</h4>
+                        <ol>
+                            <li><strong>Check Image Folders:</strong> Verify folder structure:
+                                <pre><code>StudentFolders/2025_Students/
+  Shapes/        # 193 images: object001.png to object193.png
+  Colors/        # 10 images: object001.png to object010.png
+  Abstract/      # 403 images: object001.png to object403.png</code></pre>
+                            </li>
+                            <li><strong>Case Sensitivity:</strong> Folder names must match exactly (Linux/macOS)</li>
+                            <li><strong>Server Path:</strong> Ensure server running from correct directory</li>
+                            <li><strong>Console Errors:</strong> Check browser console (F12) for specific error messages</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h2>Next Steps</h2>
+
+                <ul>
+                    <li><a href="trial-manager.html">Learn about TrialManager class</a></li>
+                    <li><a href="methods.html">Explore all available methods</a></li>
+                    <li><a href="gaze-tracking.html">Understand gaze tracking pipeline</a></li>
+                    <li><a href="calibration.html">Calibration best practices</a></li>
+                </ul>
+
+                <h2>Example Experiment Workflow</h2>
+
+                <pre><code><span class="comment">// index.html - include libraries</span>
+&lt;script src="webgazer.js"&gt;&lt;/script&gt;
+&lt;script src="localforage.min.js"&gt;&lt;/script&gt;
+&lt;script type="module"&gt;
+  <span class="keyword">import</span> { initializeExperiment } <span class="keyword">from</span> <span class="string">'./trialManager.js'</span>;
+  
+  document.addEventListener(<span class="string">'DOMContentLoaded'</span>, () => {
+    initializeExperiment();
+    console.log(<span class="string">'Press any key to begin'</span>);
+  });
+&lt;/script&gt;
+
+<span class="comment">// Workflow automatically handles:</span>
+<span class="comment">// 1. Participant dialog</span>
+<span class="comment">// 2. Image loading</span>
+<span class="comment">// 3. WebGazer init with enhanced features</span>
+<span class="comment">// 4. 9-point calibration + validation</span>
+<span class="comment">// 5. Trial loop with periodic recalibration</span>
+<span class="comment">// 6. Data export to JSON + LocalForage</span></code></pre>
+
+                <h2>Support</h2>
+
+                <p>If you encounter issues not covered here:</p>
+                <ul>
+                    <li>Check the <a href="https://github.com/mrhunsaker/GazeTracking/issues">GitHub Issues</a></li>
+                    <li>Review the <a href="../index.html">full API documentation</a></li>
+                    <li>Contact: hunsakerconsulting@gmail.com</li>
+                </ul>
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Ryan Hunsaker, M.Ed., Ph.D. All Rights Reserved.</p>
+            <p>Licensed under the Apache License, Version 2.0</p>
+            <p>Generated: January 26, 2026 | <a href="https://github.com/mrhunsaker/GazeTracking">GitHub Repository</a></p>
+        </div>
+    </footer>
+
+    <div class="scroll-top" id="scrollTop">↑</div>
+
+    <script>
+        const scrollTop = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollTop.classList.toggle('visible', window.pageYOffset > 300);
+        });
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
