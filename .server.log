@@ -1,0 +1,7 @@
+
+> gaze-tracking@2026.1.1 serve-with-api /var/home/ryhunsaker/GitHubRepos/GazeTracking
+> node server.js
+
+No TLS certificates found in project; generating a self-signed certificate for localhost. Browsers may show a warning.
+Express server serving static files from /var/home/ryhunsaker/GitHubRepos/GazeTracking and API at https://localhost:8000 (self-signed)
+Saved experiment data to /var/home/ryhunsaker/GitHubRepos/GazeTracking/data/to_analyze/experiment_SMOKE_TEST_2026-01-27T19-32-03-052Z.json

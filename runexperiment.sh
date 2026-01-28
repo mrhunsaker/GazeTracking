@@ -120,6 +120,7 @@ fi
     # Predefined student list
     declare -a STUDENTS=(
         "Experiment"
+        "Development"
     )
 
     # Function to clear screen and display header
@@ -168,12 +169,12 @@ fi
         fi
     }
 
-    # Function to validate if required files exist
+    # Function to validate if required files exist (warn only; server can generate self-signed cert)
     validate_files() {
         local dir=$1
         if [ ! -f "$dir/cert.pem" ] || [ ! -f "$dir/key.pem" ]; then
-            echo -e "\n${ORANGE}Error: Certificate files (cert.pem and key.pem) not found in $dir${NC}"
-            exit 1
+            echo -e "\n${ORANGE}Warning: Certificate files (cert.pem and key.pem) not found in $dir${NC}"
+            echo -e "${WHITE}The Node HTTPS server will generate a self-signed certificate if none are present.${NC}"
         fi
     }
 
@@ -219,16 +220,17 @@ fi
         $browser_cmd "$url" &> /dev/null &
     }
 
-    # Function to start server and browser
+    # Function to start server and browser (starts Node HTTPS server which serves static files and API)
     start_server_and_browser() {
         local dir=$1
         local port=8000
 
-        echo -e "\n${WHITE}Starting secure server...${NC}"
+        echo -e "\n${WHITE}Starting secure Node HTTPS server...${NC}"
 
-        # Start http-server in background
-        cd "$dir"
-        http-server -S -C ../cert.pem -K ../key.pem --loglevel=verbose -p $port &
+        # Start Node server from project root while telling it which directory to serve
+        cd "$ROOT_DIR"
+        # Export SERVE_DIR so server can serve this student dir
+        SERVE_DIR="$dir" PORT=$port npm run serve-with-api-https --silent &
         local server_pid=$!
 
         # Store server URL
@@ -237,7 +239,7 @@ fi
         # Launch browser
         launch_browser "$url"
 
-        echo -e "\n${WHITE}Server is running at ${CYAN}$url${NC}"
+        echo -e "\n${WHITE}Server is running at ${CYAN}$url${NC} (node PID: $server_pid)"
         echo -e "${ORANGE}Press Ctrl+C to stop the server${NC}"
 
         # Wait for user interrupt

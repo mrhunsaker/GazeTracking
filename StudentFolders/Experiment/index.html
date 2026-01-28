@@ -67,6 +67,22 @@ limitations under the License. -->
 </div>
 <div id="test-container"></div>
 
+<!-- Canvas used by WebGazer for plotting points -->
+<canvas id="plotting_canvas" style="position:absolute; top:0; left:0; z-index:999; pointer-events:none;"></canvas>
+
+<script>
+    // Ensure the plotting canvas covers the viewport and is sized properly
+    function resizePlottingCanvas() {
+        const c = document.getElementById('plotting_canvas');
+        if (!c) return;
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        c.style.width = window.innerWidth + 'px';
+        c.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', resizePlottingCanvas);
+    document.addEventListener('DOMContentLoaded', resizePlottingCanvas);
+</script>
 <!--Load dependencies-->
 <script src="webgazer.js"></script>
 <script src="localforage.min.js"></script>

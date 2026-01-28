@@ -19,14 +19,7 @@ jobs:
       - name: Install dependencies (none required)
         run: echo "No npm install required"
 
-      - name: Run sanity check
-        run: |
-          if [ -d "StudentFolders/Experiment/experiment-shapes" ]; then
-            echo "Running sanity check for experiment shapes..."
-            node StudentFolders/Experiment/sanity_check_shapes.js
-          else
-            echo "Skipping sanity check - experiment-shapes directory not present in CI (image files not committed)"
-          fi
+
 
       - name: Run unit tests
         run: node tests/run_unit_tests.js

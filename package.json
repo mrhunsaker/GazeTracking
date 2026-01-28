@@ -22,13 +22,16 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
+        "serve-with-api": "node server.js",
+        "serve-with-api-https": "node server.js",
         "test": "jest",
         "build": "webpack --config webpack.config.js",
         "lint": "eslint ."
     },
     "dependencies": {
-        "express": "^4.17.1",
-        "http-server": "^14.1.1"
+        "express": "^4.22.1",
+        "http-server": "^14.1.1",
+        "selfsigned": "^2.1.0"
     },
     "devDependencies": {
         "eslint": "^8.0.0",

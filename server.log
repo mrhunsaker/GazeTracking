@@ -1,0 +1,6 @@
+
+> gaze-tracking@2026.1.1 serve-with-api /var/home/ryhunsaker/GitHubRepos/GazeTracking
+> node server.js
+
+Express server serving static files and API at http://localhost:8000
+Saved experiment data to /var/home/ryhunsaker/GitHubRepos/GazeTracking/data/to_analyze/experiment_test123_2026-01-27T17-17-56-105Z.json

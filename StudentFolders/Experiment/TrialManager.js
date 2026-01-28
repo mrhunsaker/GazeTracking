@@ -23,7 +23,9 @@ export default class TrialManager {
         this.currentTrialIndex = 0;
         this.isPractice = false;
         this.objectImages = { targets: [], foils: [] };
-        this._lastMousePos = { x: null, y: null };
+        // mouse fallback removed — only use gaze predictions
+        // Enable verbose diagnostics for coordinate-space mismatch
+        this.diagnostics = true;
         
         // Kalman filter states for smoothing
         this.kalmanX = null;
@@ -91,19 +93,44 @@ export default class TrialManager {
      * Checks if a gaze point is an outlier based on position and velocity.
      */
     isOutlier(gazePoint) {
-        if (gazePoint.x < -100 || gazePoint.x > window.innerWidth + 100 ||
-            gazePoint.y < -100 || gazePoint.y > window.innerHeight + 100) {
+        // Adaptive bounds to reduce false rejections from coordinate-space mismatches
+        const margin = Math.max(200, Math.floor(window.innerWidth * 0.2));
+        const extremeLimitX = window.innerWidth * 3;
+        const extremeLimitY = window.innerHeight * 3;
+
+        // If coordinates are astronomically out of range, treat as outlier
+        if (gazePoint.x < -extremeLimitX || gazePoint.x > extremeLimitX ||
+            gazePoint.y < -extremeLimitY || gazePoint.y > extremeLimitY) {
+            if (this.diagnostics) console.warn('Extreme outlier detected', gazePoint);
             return true;
         }
-        
+
+        // Allow some extrapolation beyond viewport to account for scaling/transforms
+        if (gazePoint.x < -margin || gazePoint.x > window.innerWidth + margin ||
+            gazePoint.y < -margin || gazePoint.y > window.innerHeight + margin) {
+            if (this.diagnostics) {
+                const video = document.querySelector('video');
+                console.debug('Out-of-bounds gaze sample (tolerated):', gazePoint, {
+                    window: { w: window.innerWidth, h: window.innerHeight },
+                    video: video ? { videoWidth: video.videoWidth, videoHeight: video.videoHeight, cssW: video.style.width, cssH: video.style.height } : null
+                });
+            }
+            // Don't immediately reject — treat as non-outlier to allow further validation
+        }
+
         if (this.recentGazePoints.length > 0) {
             const lastPoint = this.recentGazePoints[this.recentGazePoints.length - 1];
             const distance = Math.sqrt(
                 Math.pow(gazePoint.x - lastPoint.x, 2) + 
                 Math.pow(gazePoint.y - lastPoint.y, 2)
             );
-            if (distance > 500) return true;
+            const maxDistance = Math.max(500, Math.max(window.innerWidth, window.innerHeight) * 0.5);
+            if (distance > maxDistance) {
+                if (this.diagnostics) console.debug('Large jump detected (allowed):', distance, 'maxDistance', maxDistance, { gazePoint, lastPoint });
+                // Allow occasional large jumps rather than marking outlier immediately
+            }
         }
+
         return false;
     }
 
@@ -192,7 +219,15 @@ export default class TrialManager {
         if (!gazePoint) return null;
         
         if (this.isOutlier(gazePoint)) {
-            console.log('Outlier rejected:', gazePoint);
+            if (this.diagnostics) {
+                const video = document.querySelector('video');
+                console.warn('Outlier rejected:', gazePoint, {
+                    window: { w: window.innerWidth, h: window.innerHeight },
+                    video: video ? { videoWidth: video.videoWidth, videoHeight: video.videoHeight, cssW: video.style.width, cssH: video.style.height } : null
+                });
+            } else {
+                console.warn('Outlier rejected:', gazePoint);
+            }
             return null;
         }
         
@@ -303,6 +338,17 @@ export default class TrialManager {
             box.appendChild(typeLabel);
             box.appendChild(typeSelect);
 
+            // Legacy stimulus set selector (optional, for compatibility with older UI)
+            const legacyLabel = document.createElement('label');
+            legacyLabel.textContent = 'Legacy stimulus set (optional):';
+            legacyLabel.style.display = 'block';
+            legacyLabel.style.marginTop = '8px';
+            const legacySelect = document.createElement('select');
+            ['', 'Shapes', 'Colors', 'Abstract', 'Pictures'].forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; legacySelect.appendChild(o); });
+            legacySelect.style.width = '100%';
+            box.appendChild(legacyLabel);
+            box.appendChild(legacySelect);
+
             // Note: do not allow manual selection of shapes/colors; full stimulus pool will be used
 
             // difficulty
@@ -354,6 +400,12 @@ export default class TrialManager {
                 this.selectedDifficulty = diffSelect.value;
                 const tpb = parseInt(trialsInput.value, 10) || this.manifest.trialsPerBlock;
                 this.manifest.trialsPerBlock = tpb;
+                // legacy compatibility: map optional legacy stimulus set into instance
+                const legacySet = legacySelect.value;
+                if (legacySet) this.testType = legacySet;
+                // store user-facing initials and trialCount for compatibility with Development UI
+                this.userInitials = pidVal;
+                this.trialCount = tpb;
                 // Do not restrict the stimulus pool; use full manifest shapes/colors
 
                 // reseed and reassign
@@ -379,7 +431,7 @@ export default class TrialManager {
     async initWebGazer() {
         return new Promise((resolve) => {
             if (typeof webgazer === 'undefined') {
-                console.warn('WebGazer not loaded, using mouse fallback');
+                console.warn('WebGazer not loaded');
                 resolve(false);
                 return;
             }
@@ -1226,37 +1278,47 @@ export default class TrialManager {
     async startGazeRecording(durationMs = 2000, intervalMs = 250) {
         const samples = [];
         const start = performance.now();
-        // mouse fallback listener
-        const mouseHandler = (ev) => { 
-            this._lastMousePos = { x: ev.clientX, y: ev.clientY }; 
-        };
-        window.addEventListener('mousemove', mouseHandler);
+        // No mouse fallback: only collect gaze-based samples
 
-        const tick = () => {
-            let x = null, y = null;
+        // Async tick so we can await promise-based prediction APIs
+        const tick = async () => {
+            let x = null, y = null, rawX = null, rawY = null, headPose = null;
             try {
-                if (window.webgazer && typeof window.webgazer.getCurrentPrediction === 'function') {
-                    const p = window.webgazer.getCurrentPrediction();
-                    if (p && typeof p.x === 'number' && typeof p.y === 'number') { x = p.x; y = p.y; }
+                // Prefer the manager's validated/processed prediction if available
+                let p = null;
+                if (typeof this.getCurrentGazePrediction === 'function') {
+                    try { p = await this.getCurrentGazePrediction(); } catch (e) { p = null; }
+                } else if (window.webgazer && typeof window.webgazer.getCurrentPrediction === 'function') {
+                    try { p = await window.webgazer.getCurrentPrediction(); } catch (e) { p = null; }
                 }
-            } catch (e) { /* ignore */ }
 
-            if ((x === null || y === null) && this._lastMousePos) {
-                x = this._lastMousePos.x; y = this._lastMousePos.y;
+                if (p) {
+                    if (typeof p.x === 'number') x = p.x;
+                    if (typeof p.y === 'number') y = p.y;
+                    if (typeof p.rawX === 'number') rawX = p.rawX;
+                    if (typeof p.rawY === 'number') rawY = p.rawY;
+                    if (p.headPose) headPose = p.headPose;
+                }
+            } catch (e) {
+                if (this.diagnostics) console.debug('Error obtaining gaze prediction tick:', e);
             }
 
-            samples.push({ t: Math.round(performance.now() - start), x, y });
+            const sample = { t: Math.round(performance.now() - start), x, y, rawX, rawY, headPose };
+            samples.push(sample);
+
+            if (this.diagnostics) {
+                try {
+                    console.debug('Gaze sample', sample);
+                } catch (e) { /* ignore logging errors */ }
+            }
         };
 
         // first sample immediately
-        tick();
-        const iv = setInterval(() => {
-            tick();
-        }, intervalMs);
+        await tick();
+        const iv = setInterval(() => { tick().catch(() => {}); }, intervalMs);
 
         await new Promise(res => setTimeout(res, durationMs));
         clearInterval(iv);
-        window.removeEventListener('mousemove', mouseHandler);
         return samples;
     }
 
@@ -1275,10 +1337,8 @@ export default class TrialManager {
             const testPrediction = await this.getCurrentGazePrediction();
             if (!testPrediction || testPrediction.x === null) {
                 console.error('❌ WebGazer not providing predictions! Face may not be detected.');
-                const proceed = confirm('WebGazer is not detecting your face. Proceed with mouse tracking only?');
-                if (!proceed) {
-                    throw new Error('WebGazer calibration failed');
-                }
+                // Mouse fallback is disabled to ensure experiments use gaze data only.
+                throw new Error('WebGazer calibration failed — mouse fallback is disabled');
             } else {
                 console.log('✓ WebGazer working:', testPrediction);
             }
@@ -1451,32 +1511,43 @@ export async function initializeExperiment() {
         console.error('Failed to load trial manifest during initialization', err);
         // allow showInitialsDialog to attempt to recover by loading manifest itself
     }
-
+    // Adapted flow from Development/trialManager.js: initialize, show initials, start WebGazer,
+    // run calibration, then start experiment on first keypress. This is more robust for
+    // setups that require explicit user confirmation before accessing camera.
     document.addEventListener("keydown", async (e) => {
         if (experimentInitiated) return;
 
         experimentInitiated = true;
         try {
-            /** 1. First show the dialog and get user input **/
-            await trialManager.showInitialsDialog();
+            // 1. Show initials dialog if the implementation exists
+            if (typeof trialManager.showInitialsDialog === 'function') {
+                await trialManager.showInitialsDialog();
+            }
 
-            /** 2. Then setup images and initialize WebGazer **/
-            await Promise.all([
-                trialManager.setupImages(),
-                trialManager.initWebGazer(),
-            ]);
+            // 2. Ensure images are ready and WebGazer is initialized (do in parallel)
+            const setupPromises = [];
+            if (typeof trialManager.setupImages === 'function') setupPromises.push(trialManager.setupImages());
+            if (typeof trialManager.initWebGazer === 'function') setupPromises.push(trialManager.initWebGazer());
+            await Promise.all(setupPromises);
 
-            /** 3. Start calibration phase without showing dialog again **/
-            await trialManager.startCalibrationPhase();
-            // After calibration, start the experiment run loop
-            try {
-                await trialManager.startExperiment();
-            } catch (e) {
-                console.error('Failed to start experiment:', e);
+            // 3. Start calibration if available
+            if (typeof trialManager.startCalibrationPhase === 'function') {
+                await trialManager.startCalibrationPhase();
+            }
+
+            // 4. Start the experiment run loop
+            if (typeof trialManager.startExperiment === 'function') {
+                try {
+                    await trialManager.startExperiment();
+                } catch (e) {
+                    console.error('Failed to start experiment:', e);
+                }
+            } else {
+                console.warn('startExperiment not implemented on TrialManager');
             }
         }
         catch (err) {
-            console.error(`Initialization error:`, err);
+            console.error('Initialization error:', err);
             experimentInitiated = false;
         }
     });
